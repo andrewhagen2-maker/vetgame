@@ -89,10 +89,6 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .room .wains{position:absolute;left:0;width:100%;background:repeating-linear-gradient(90deg,#ffc9dc 0 34px,#ffd6e5 34px 68px);border-top:8px solid #fff}
 .room .floor{position:absolute;left:0;bottom:0;width:100%;background:#f3d3a3;background-image:repeating-linear-gradient(90deg,transparent 0 118px,#e2bb86 118px 122px),repeating-linear-gradient(0deg,#f3d3a3 0 58px,#ecc795 58px 62px)}
 .deco svg{width:100%;height:100%;overflow:visible}
-.deco.locked{border:5px dashed #e3b6cc;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#ffffff66;color:#d08aac;font-size:30px}
-.deco.locked .lk{width:46px;height:46px}
-.deco.locked .cost{display:flex;align-items:center;gap:4px}
-.deco.locked .cost svg{width:34px;height:34px}
 .deco.tap{animation:boing2 .6s}
 .deco.shake{animation:shake2 .4s}
 .deco.floaty{animation:floaty 1.4s ease-in-out}
@@ -121,8 +117,6 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .tool{width:var(--ts);height:var(--ts);border-radius:26%;background:#fff;box-shadow:0 7px 0 #f0c27a,0 10px 16px rgba(0,0,0,.12);padding:calc(var(--ts) * .1);touch-action:none;cursor:grab;position:relative}
 .tool svg{width:100%;height:100%;pointer-events:none}
 .tool.dragging{opacity:.3}
-.tool.hint{animation:hintW .9s ease-in-out infinite;box-shadow:0 0 0 8px #fff06a,0 0 34px 12px #ffe14d}
-@keyframes hintW{0%,100%{transform:rotate(0) scale(1)}25%{transform:rotate(-12deg) scale(1.14)}75%{transform:rotate(12deg) scale(1.14)}}
 .bubble{position:absolute;background:#fff;border-radius:44px;border:7px solid #ffb3cd;box-shadow:0 10px 24px rgba(120,40,80,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 16px 12px;z-index:6;transform-origin:10% 90%;animation:popIn .5s cubic-bezier(.3,1.6,.5,1) both}
 .bubble .ic{width:130px;height:130px}
 .bubble .ic svg{width:100%;height:100%;overflow:visible}
@@ -167,7 +161,8 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .stk{border-radius:50%;border:6px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.18);overflow:hidden;position:relative}
 .stk svg{width:88%;height:88%;margin:6%;overflow:visible}
 .stk.gold{border-color:#ffd54a;box-shadow:0 0 0 4px #e0a800,0 0 22px 4px #ffe066}
-.stk.gold:after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(120deg,transparent 30%,#ffffffaa 45%,transparent 60%);background-size:300% 100%;animation:shine 2.4s linear infinite}
+.stk.sis{border-color:#e3ccff;box-shadow:0 0 0 4px #a77be8,0 0 20px 4px #e2ccff}
+.stk.gold:after,.stk.sis:after{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(120deg,transparent 30%,#ffffffaa 45%,transparent 60%);background-size:300% 100%;animation:shine 2.4s linear infinite}
 @keyframes shine{from{background-position:150% 0}to{background-position:-150% 0}}
 
 /* ---------- title ---------- */
@@ -215,7 +210,7 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .bhead .bk{width:70px;height:70px}
 .bhead .pill{box-shadow:0 5px 0 #ffd36b}
 .bhead .x{margin-left:auto;width:76px;height:76px;position:relative;background:#ff8fb1;box-shadow:0 7px 0 #d94f80}
-.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:18px;overflow:auto;padding:10px 6px;justify-items:center}
+.bgrid{touch-action:pan-y;overscroll-behavior:contain;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:18px;overflow:auto;padding:10px 6px;justify-items:center}
 .bslot{position:relative;width:130px;height:130px}
 .bslot .stk{width:100%;height:100%}
 .bslot.empty .stk{background:#eee!important;border-style:dashed;border-color:#ddd;box-shadow:none}
@@ -229,6 +224,42 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .modal button.danger{background:#ff4d6d;color:#fff}
 .bookbtn{position:absolute;width:130px;height:130px;border-radius:30px;background:#fff;padding:14px;box-shadow:0 8px 0 #ffb3cd,0 14px 20px rgba(0,0,0,.15);z-index:30;animation:pulse 2.4s ease-in-out infinite}
 .bookbtn svg{width:100%;height:100%}
+.bookbtn.shopbtn{box-shadow:0 8px 0 #ffd166,0 14px 20px rgba(0,0,0,.15);animation-delay:-1.2s}
+.icon-btn.yellow{background:#ffc94d;box-shadow:0 7px 0 #e0a020,0 12px 20px rgba(60,20,80,.18)}
+/* ---------- walking pets ---------- */
+.petlayer{position:absolute;left:0;top:0;width:100%;height:100%;z-index:4;pointer-events:none}
+.petlayer .pet{pointer-events:auto}
+.pet .flip{width:100%;height:100%;transition:transform .25s}
+.pet .flip.left{transform:scaleX(-1)}
+/* ---------- shop ---------- */
+.shop-bg{position:absolute;inset:0;background:#fff4e0;background-image:radial-gradient(#ffe6b8 14%,transparent 15%);background-size:56px 56px}
+.awning{position:absolute;left:0;top:0;width:100%;height:118px;background:repeating-linear-gradient(90deg,#ff8fb1 0 70px,#fff 70px 140px);z-index:2}
+.awning:after{content:"";position:absolute;left:0;bottom:-30px;width:100%;height:30px;background:radial-gradient(circle at 35px 0,#ff8fb1 29px,transparent 30px),radial-gradient(circle at 105px 0,#fff 29px,transparent 30px);background-size:140px 30px}
+.shop-sign{position:absolute;top:22px;left:50%;transform:translateX(-50%);background:#fff;border:8px solid #ffd166;border-radius:30px;padding:2px 40px 6px;font-size:58px;color:#ff5d8f;z-index:21;box-shadow:0 8px 16px rgba(0,0,0,.12);white-space:nowrap}
+.tabs{position:absolute;left:0;width:100%;top:168px;display:flex;justify-content:center;gap:30px;z-index:5}
+.tab{width:100px;height:100px;border-radius:50%;background:#fff;padding:20px;box-shadow:0 6px 0 #e7c9a0;opacity:.6;transition:transform .2s}
+.tab svg{width:100%;height:100%}
+.tab.on{opacity:1;transform:scale(1.15);box-shadow:0 0 0 6px #ff8fb1,0 6px 0 #e7c9a0}
+.sgrid{position:absolute;left:20px;right:20px;top:300px;bottom:14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));grid-auto-rows:186px;gap:16px;overflow-y:auto;touch-action:pan-y;overscroll-behavior:contain;padding:8px 8px 20px;z-index:5}
+.card{background:#fff;border-radius:30px;box-shadow:0 7px 0 #f0c27a,0 10px 16px rgba(0,0,0,.1);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:12px 8px 12px;position:relative;cursor:pointer}
+.card .pic{width:124px;height:108px}
+.card .pic svg{width:100%;height:100%;overflow:visible}
+.card .price{display:flex;align-items:center;gap:4px;font-size:34px;color:#e39a00;background:#fff6d6;border-radius:24px;padding:0 16px 0 6px}
+.card .price svg{width:40px;height:40px}
+.card.poor{opacity:.5}
+.card.poor .price{color:#b9a27a;background:#f3eee4}
+.card.owned{background:#f0fff3;box-shadow:0 7px 0 #8ee3a0,0 10px 16px rgba(0,0,0,.1)}
+.card .got{width:54px;height:54px;border-radius:50%;background:#5cc06b;padding:10px}
+.card .got svg{width:100%;height:100%}
+.card.shake{animation:shake2 .4s}
+.card.hopit{animation:hop .45s}
+.buy{background:#fffdf6;border-radius:44px;border:10px solid #ffd166;padding:26px 34px 30px;display:flex;flex-direction:column;align-items:center;gap:22px;animation:popIn .45s cubic-bezier(.3,1.5,.5,1)}
+.buy .big{width:300px;height:260px}
+.buy .big svg{width:100%;height:100%;overflow:visible}
+.buy .row{display:flex;gap:30px;align-items:center}
+.buy .yes{height:110px;border-radius:55px;background:#5cc06b;box-shadow:0 8px 0 #3a8a48;display:flex;align-items:center;gap:8px;padding:0 34px 0 22px;font-size:50px;color:#fff}
+.buy .yes svg{width:64px;height:64px}
+.buy .no{position:relative;width:90px;height:90px;background:#ff8fb1;box-shadow:0 7px 0 #d94f80}
 </style>
 </head>
 <body>
@@ -238,6 +269,7 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
   <div class="screen" id="s-exam"></div>
   <div class="screen" id="s-closed"></div>
   <div class="screen" id="s-room"></div>
+  <div class="screen" id="s-shop"></div>
   <button class="icon-btn" id="mute" aria-label="Sound on or off"></button>
 </div>
 <canvas id="fx"></canvas>
@@ -268,8 +300,20 @@ function run(fn) { fn().catch(e => { if (e !== ABORT) console.error(e); }); }
 
 // ---------- saving ----------
 const SAVE_KEY = 'drEvieClinic.v1';
-let save = { stars: 0, stickers: {}, muted: false, days: 0 };
-function load() { try { const s = JSON.parse(localStorage.getItem(SAVE_KEY)); if (s && typeof s === 'object') save = Object.assign(save, s); } catch (e) {} if (!save.stickers || typeof save.stickers !== 'object') save.stickers = {}; }
+// stars = stars to spend in the shop; owned = bought decorations; pets = bought pets
+const freshSave = muted => ({ v: 2, stars: 0, stickers: {}, muted: !!muted, days: 0, owned: {}, pets: [] });
+let save = freshSave(false);
+function load() {
+  let s = null; try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) {}
+  if (s && typeof s === 'object') {
+    // v1 unlocked decorations by star total; keep everything she already had
+    if (!s.v) { s.owned = {}; DECOS.forEach(d => { if ((s.stars || 0) >= d.cost) s.owned[d.id] = true; }); s.pets = []; s.v = 2; }
+    save = Object.assign(save, s);
+  }
+  if (!save.stickers || typeof save.stickers !== 'object') save.stickers = {};
+  if (!save.owned || typeof save.owned !== 'object') save.owned = {};
+  if (!Array.isArray(save.pets)) save.pets = [];
+}
 function store() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
 /* =====================================================================
@@ -378,7 +422,18 @@ const SFX = {
   boop() { tone({ f: 320, pts: [[0.15, 240]], dur: 0.17, vol: 0.2 }); },
   bubbles() { for (let i = 0; i < 5; i++) tone({ f: rand(350, 500), pts: [[0.06, rand(800, 1100)]], dur: 0.07, vol: 0.14, at: i * 0.09 + rand(0, 0.04) }); },
   fanfare() { [[72, 0, .15], [76, .15, .15], [79, .3, .15], [84, .45, .35], [79, .85, .15], [84, 1.0, .7]].forEach(([m, at, d]) => { tone({ type: 'triangle', f: mf(m), dur: d + 0.1, vol: 0.18, at }); tone({ type: 'square', f: mf(m - 12), dur: d, vol: 0.04, at, filt: ['lowpass', 1500, 1] }); }); },
-  tweeze() { this.pop(); tone({ f: 2400, dur: 0.25, vol: 0.08, at: 0.12 }); }
+  tweeze() { this.pop(); tone({ f: 2400, dur: 0.25, vol: 0.08, at: 0.12 }); },
+  baa() { tone({ type: 'sawtooth', f: 420, pts: [[0.1, 470], [0.7, 380]], dur: 0.75, vol: 0.2, a: 0.04, hold: 0.4, vib: [9, 40], filt: ['bandpass', 1100, 2] }); },
+  peep() { for (let i = 0; i < 3; i++) tone({ f: 2600, pts: [[0.05, 3300], [0.09, 2900]], dur: 0.1, vol: 0.15, at: i * 0.16 }); },
+  wheek() { for (const at of [0, 0.34]) tone({ f: 1100, pts: [[0.25, 2600]], dur: 0.28, vol: 0.17, vib: [20, 40], at }); },
+  penguin() { tone({ type: 'sawtooth', f: 500, pts: [[0.15, 720], [0.4, 560]], dur: 0.45, vol: 0.17, vib: [18, 30], filt: ['bandpass', 1200, 3] }); tone({ type: 'sawtooth', f: 560, pts: [[0.12, 760]], dur: 0.25, vol: 0.15, vib: [18, 30], filt: ['bandpass', 1200, 3], at: 0.5 }); },
+  shiloh() {
+    tone({ type: 'triangle', f: 520, pts: [[0.18, 720]], dur: 0.22, vol: 0.16, vib: [6, 8] });
+    tone({ type: 'sawtooth', f: 520, pts: [[0.18, 720]], dur: 0.22, vol: 0.05, filt: ['bandpass', 2300, 3] });
+    tone({ type: 'triangle', f: 720, pts: [[0.28, 560]], dur: 0.32, vol: 0.16, vib: [6, 10], at: 0.24 });
+    setTimeout(() => SFX.giggle(), 650);
+  },
+  coin() { tone({ type: 'square', f: 988, dur: 0.1, vol: 0.08, filt: ['lowpass', 3000, 1] }); tone({ type: 'square', f: 1319, dur: 0.4, vol: 0.08, at: 0.09, filt: ['lowpass', 3000, 1] }); nz({ dur: 0.25, vol: 0.05, filt: ['highpass', 6000, 1], at: 0.05 }); }
 };
 const TOOL_SFX = { tweezers: 'tweeze', spray: 'spray', bandage: 'slap', ice: 'clink', spoon: 'gulp', tissue: 'honk', thermo: 'beep', steth: 'heartbeat', cuddle: 'aww', blankie: 'whoosh', toy: 'squeakToy', snack: 'nom' };
 
@@ -450,7 +505,7 @@ function face(f, mood) {
     if (f.lash) s += L(`M${R1(x + side * er * 0.55)} ${R1(y - er * 0.82)} l${side * 7} -7 M${R1(x + side * er * 0.85)} ${R1(y - er * 0.42)} l${side * 9} -3`, eL, 3);
     if (mood === 'sad') {
       s += L(`M${R1(x - er * 0.6)} ${R1(y + er * 0.75)} Q${x} ${R1(y + er * 1.05)} ${R1(x + er * 0.6)} ${R1(y + er * 0.75)}`, '#8fd3ff', 3);
-      s += L(`M${R1(x + side * er)} ${y - er - 6} Q${R1(x + side * er * 0.1)} ${y - er - 8} ${R1(x - side * er * 0.8)} ${y - er - 17}`, eL, 5);
+      s += L(`M${R1(x + side * er)} ${y - er - 6} Q${R1(x + side * er * 0.1)} ${y - er - 8} ${R1(x - side * er * 0.8)} ${y - er - 17}`, f.brow || eL, 5);
     }
   }
   const ny = f.ny, my = f.my, nose = f.nose;
@@ -460,7 +515,15 @@ function face(f, mood) {
   else if (nose === 'pig') s += E(cx, ny, 30, 21, '#f590af', '#c9607f', '', 3) + E(cx - 10, ny, 5, 8, '#b84a6b') + E(cx + 10, ny, 5, 8, '#b84a6b');
   else if (nose === 'horse') s += E(cx - 15, ny, 5, 7, '#7a4a2e') + E(cx + 15, ny, 5, 7, '#7a4a2e');
   else if (nose === 'dots') s += C(cx - 6, ny, 2.5, '#3a5a2a') + C(cx + 6, ny, 2.5, '#3a5a2a');
-  if (f.mouth === 'beak') {
+  else if (nose === 'button') s += L(`M${cx - 5} ${ny} Q${cx} ${ny + 5} ${cx + 5} ${ny}`, '#d99a80', 3);
+  if (f.mouth === 'bill') {
+    if (mood === 'happy') s += P(`M${cx - 22} ${ny + 6} Q${cx} ${ny + 32} ${cx + 22} ${ny + 6}Z`, '#8a2d3b', '#d9731b', '', 3) + E(cx, ny + 16, 7, 5, '#ff7b95');
+    else s += E(cx, ny + 11, 22, 7, '#f08a30', '#d9731b', '', 3);
+    s += E(cx, ny, 30, 12, '#ff9f43', '#d9731b', '', 3) + C(cx - 8, ny - 3, 2, '#b85a10') + C(cx + 8, ny - 3, 2, '#b85a10');
+  } else if (f.mouth === 'beak2') {
+    if (mood === 'happy') s += P(`M${cx - 12} ${ny + 2} L${cx} ${ny + 22} L${cx + 12} ${ny + 2}Z`, '#8a2d3b') + P(`M${cx - 11} ${ny + 12} L${cx} ${ny + 28} L${cx + 11} ${ny + 12}Z`, '#ffa64d', '#d9731b', '', 2.5);
+    s += P(`M${cx - 14} ${ny - 4} L${cx} ${ny + 14} L${cx + 14} ${ny - 4} Q${cx} ${ny - 10} ${cx - 14} ${ny - 4}Z`, '#ffb347', '#d9731b', '', 3);
+  } else if (f.mouth === 'beak') {
     if (mood === 'happy') s += P(`M${cx - 14} ${ny + 8} Q${cx} ${ny + 34} ${cx + 14} ${ny + 8}Z`, '#8a2d3b', '#c9901a', '', 3) + E(cx, ny + 20, 6, 5, '#ff7b95') + P(`M${cx - 14} ${ny + 18} Q${cx} ${ny + 38} ${cx + 14} ${ny + 18} Q${cx} ${ny + 28} ${cx - 14} ${ny + 18}Z`, '#f0a92a', '#c9901a', '', 3);
     else s += E(cx, ny + 16, 13, 7, '#f0a92a', '#c9901a', '', 3);
     s += P(`M${cx - 21} ${ny - 12} Q${cx} ${ny - 22} ${cx + 21} ${ny - 12} Q${cx + 18} ${ny + 16} ${cx} ${ny + 22} Q${cx - 8} ${ny + 8} ${cx - 21} ${ny - 12}Z`, '#ffcf3f', '#c9901a', '', 3);
@@ -568,7 +631,57 @@ def('unicorn', { stars: 5, bg: '#f3e6ff', treat: 'starcookie', sound: () => { SF
   face: { ex: 32, ey: 108, er: 14, ny: 168, my: 188, nose: 'horse', bx: 56, by: 138, lash: true, eyeLine: '#5a3a6a' },
   anchors: { top: [186, 62], tummy: [150, 252], chest: [150, 222], side: [104, 240], paw: [182, 278] },
   draw() { return horse('#ffffff', '#fff0f6', ['#ff8fb1', '#b79cff', '#ffd166', '#8ee3c8', '#7cc6fe'], '#f6c945', true); } });
-const ORDER = ['puppy', 'bigdog', 'dachshund', 'poodle', 'kitten', 'coco', 'bunny', 'hamster', 'turtle', 'parrot', 'pony', 'piglet', 'unicorn'];
+def('lamb', { bg: '#f1ecff', treat: 'carrot', sound: () => SFX.baa(),
+  face: { ex: 28, ey: 134, er: 14, ny: 162, my: 178, nose: 'cat', bx: 44, by: 160 }, anchors: { top: [176, 76], side: [100, 232] },
+  draw() { const w = '#fbf7f0', sk = '#f6dcc8', dk = '#6b5555';
+    const ear = `<g transform="rotate(25 84 122)">${E(84, 122, 30, 13, sk, OUT(sk))}${E(88, 122, 18, 6, '#ffc2d4')}</g>`;
+    return fluff(232, 212, 8, 12, w) + E(116, 282, 16, 12, dk, OUT(dk)) + E(184, 282, 16, 12, dk, OUT(dk)) + fluff(150, 226, 46, 20, w) + ear + mirror(ear) + E(150, 136, 58, 64, sk, OUT(sk)) + fluff(150, 74, 26, 14, w); } });
+def('duckling', { bg: '#fff6c2', treat: 'cracker', sound: () => SFX.peep(),
+  face: { ex: 30, ey: 118, er: 14, ny: 152, my: 168, nose: 'bill', mouth: 'bill', bx: 54, by: 146 }, anchors: { paw: [178, 284], top: [166, 60], side: [94, 236] },
+  draw() { const c = '#ffe066', o = '#ff9f43';
+    const wing = `<g transform="rotate(20 90 230)">${E(90, 230, 20, 36, '#ffd23f', OUT(c))}</g>`;
+    const foot = x => P(`M${x - 20} 292 L${x} 274 L${x + 20} 292Z`, o, OUT(o), '', 3);
+    const tuft = 'M146 58 Q138 36 152 30 M154 58 Q162 40 172 44';
+    return foot(122) + foot(178) + E(150, 232, 68, 54, c, OUT(c)) + wing + mirror(wing) + L(tuft, OUT(c), 10) + C(150, 124, 70, c, OUT(c)) + L(tuft, c, 6); } });
+def('fox', { bg: '#ffe4cf', treat: 'berry', sound: () => SFX.bark(2.1, 3),
+  face: { ex: 32, ey: 122, er: 15, ny: 156, my: 170, nose: 'dog', iris: '#c98a2a', bx: 54, by: 150 }, anchors: { top: [150, 56] },
+  draw() { const c = '#f2833a', w = '#fff6ee', d = '#5a3422';
+    const ear = P('M80 100 L78 18 L140 58Z', c, OUT(c)) + P('M78 20 L82 46 L102 34Z', d) + P('M92 86 L90 46 L124 62Z', w);
+    return thick('M210 258 Q276 262 266 196', c, 26) + C(267, 192, 15, w) + stdBody(c, w, { pc: d }) + ear + mirror(ear) + C(150, 124, 78, c, OUT(c)) + P('M76 128 Q100 196 150 196 Q200 196 224 128 Q190 160 150 146 Q110 160 76 128Z', w); } });
+def('panda', { bg: '#e6f6e2', treat: 'bamboo', sound: () => SFX.meow(1.7),
+  face: { ex: 32, ey: 122, er: 13, ny: 152, my: 168, nose: 'dog', iris: '#ffffff', eyeLine: '#ffffff', brow: '#2b2b33', bx: 58, by: 156 }, anchors: { top: [150, 50] },
+  draw() { const w = '#ffffff', k = '#2b2b33';
+    const ear = C(86, 64, 24, k, '#111');
+    const patch = `<g transform="rotate(-25 118 124)">${E(118, 124, 23, 29, k)}</g>`;
+    const arm = `<g transform="rotate(25 92 222)">${E(92, 222, 22, 40, k, '#111')}</g>`;
+    return E(116, 280, 26, 17, k, '#111') + E(184, 280, 26, 17, k, '#111') + E(150, 230, 70, 56, w, '#a8a8b8') + arm + mirror(arm) + ear + mirror(ear) + C(150, 124, 80, w, '#a8a8b8') + patch + mirror(patch); } });
+def('penguin', { bg: '#dff1ff', treat: 'fish', sound: () => SFX.penguin(),
+  face: { ex: 30, ey: 124, er: 13, ny: 150, my: 170, nose: 'pointy', mouth: 'beak2', bx: 54, by: 156 }, anchors: { paw: [180, 286], top: [162, 54], tummy: [150, 242], side: [74, 214] },
+  draw() { const k = '#2f3a56', w = '#ffffff', o = '#ffa64d';
+    const flip = `<g transform="rotate(22 64 210)">${E(64, 210, 16, 46, k, '#1c2438')}</g>`;
+    return E(120, 288, 22, 10, o, OUT(o)) + E(180, 288, 22, 10, o, OUT(o)) + flip + mirror(flip) + E(150, 184, 92, 104, k, '#1c2438')
+      + P('M150 108 Q122 76 94 98 Q70 124 84 162 Q100 196 150 200 Q200 196 216 162 Q230 124 206 98 Q178 76 150 108Z', w) + E(150, 242, 58, 42, w); } });
+def('guineapig', { bg: '#f6e6d4', treat: 'carrot', sound: () => SFX.wheek(),
+  face: { ex: 36, ey: 146, er: 14, ny: 168, my: 180, nose: 'tiny', bx: 60, by: 180 }, anchors: { paw: [176, 284], top: [150, 104], tummy: [150, 252], chest: [150, 228], side: [70, 214] },
+  draw() { const c = '#c98b55', w = '#fffaf2', d = '#6b4a32', pk = '#ffb7a0';
+    const ear = E(86, 110, 20, 14, '#e0a87a', OUT(c), 'transform="rotate(-25 86 110)"');
+    return ear + mirror(ear) + E(150, 196, 118, 94, c, OUT(c)) + P('M150 104 Q128 140 136 200 Q150 232 164 200 Q172 140 150 104Z', w) + E(150, 170, 48, 28, w) + E(100, 138, 30, 26, d, null, 'opacity=".7"')
+      + E(130, 286, 20, 9, pk, OUT(pk)) + E(170, 286, 20, 9, pk, OUT(pk)); } });
+// Evie's little sister
+def('shiloh', { name: 'Shiloh', stars: 5, sis: true, human: true, bg: '#ffe4f2', treat: 'lolly', sound: () => SFX.shiloh(),
+  face: { ex: 30, ey: 134, er: 15, ny: 156, my: 172, nose: 'button', iris: '#4a9be8', lash: true, bx: 52, by: 162, mouthLine: '#a8475a' },
+  anchors: { paw: [210, 254], top: [178, 50], tummy: [150, 240], chest: [150, 216], side: [132, 270] },
+  draw() { const sk = '#ffe1cc', hr = '#f6d36b', ho = '#d4a43a', dr = '#ff8fb1', sh = '#8a63e0', tie = '#ff6fa0';
+    const arm = thick('M116 204 Q98 226 92 246', sk, 14) + C(90, 252, 12, sk, OUT(sk));
+    const leg = `<rect x="124" y="258" width="18" height="24" fill="${sk}" stroke="${OUT(sk)}" stroke-width="3"/>` + E(132, 286, 19, 9, sh, OUT(sh));
+    return P('M206 60 Q268 54 266 118 Q264 172 228 192 Q244 140 220 98Z', hr, ho)
+      + leg + mirror(leg) + arm + mirror(arm)
+      + P('M114 190 L186 190 L214 264 Q150 278 86 264Z', dr, OUT(dr)) + P('M126 190 Q150 212 174 190Z', '#fff', OUT(dr), '', 3) + C(150, 234, 4, '#fff') + C(150, 250, 4, '#fff')
+      + C(150, 126, 80, hr, ho) + C(212, 64, 13, tie, OUT(tie))
+      + C(76, 138, 12, sk, OUT(sk)) + C(224, 138, 12, sk, OUT(sk))
+      + E(150, 138, 70, 68, sk, OUT(sk))
+      + P('M80 134 Q74 52 150 44 Q226 52 220 134 Q206 96 186 88 Q172 108 150 96 Q128 108 114 88 Q94 96 80 134Z', hr, ho, '', 3); } });
+const ORDER = ['puppy', 'bigdog', 'dachshund', 'poodle', 'fox', 'kitten', 'coco', 'bunny', 'hamster', 'guineapig', 'turtle', 'lamb', 'duckling', 'parrot', 'penguin', 'pony', 'piglet', 'panda', 'unicorn', 'shiloh'];
 
 // ---------- problems ----------
 const PROBLEMS = {
@@ -642,6 +755,7 @@ function animalSVG(sp, mood = 'sad', pr = null, step = 0) {
 const V = inner => `<svg viewBox="0 0 100 100" overflow="visible">${inner}</svg>`;
 const ICONS = {
   thorn: V(C(50, 62, 20, '#ffb3c6', '#e07a9a') + C(26, 38, 9, '#ffb3c6', '#e07a9a') + C(42, 26, 9, '#ffb3c6', '#e07a9a') + C(58, 26, 9, '#ffb3c6', '#e07a9a') + C(74, 38, 9, '#ffb3c6', '#e07a9a') + P('M60 72 L90 44 L72 80Z', '#8b5a2b', '#5a3618', '', 3) + C(62, 74, 5, '#ff4d6d')),
+  thornHand: V(E(44, 58, 30, 26, '#ffe1cc', '#e0b48a') + [22, 36, 50, 64].map(x => `<rect x="${x - 6}" y="18" width="13" height="30" rx="6.5" fill="#ffe1cc" stroke="#e0b48a" stroke-width="4"/>`).join('') + E(44, 64, 26, 20, '#ffe1cc') + P('M60 72 L90 44 L72 80Z', '#8b5a2b', '#5a3618', '', 3) + C(62, 74, 5, '#ff4d6d')),
   scrape: V(C(50, 50, 38, '#ffe0c2', '#e0b48a') + L('M26 40 l40 -10 M24 54 l50 -8 M30 68 l38 -10', '#e8424f', 6)),
   bonk: V(C(50, 60, 32, '#ffd8a8', '#e0b48a') + C(62, 30, 13, '#ff9a9a', '#e06666', '', 3) + star(20, 24, 10) + star(86, 18, 9) + star(88, 54, 7)),
   tummy: V(C(50, 52, 38, '#ffe0c2', '#e0b48a') + `<g transform="translate(46 52)">${L('M0 0 a4 4 0 0 1 8 0 a8 8 0 0 1 -16 0 a12 12 0 0 1 24 0 a16 16 0 0 1 -32 0 a20 20 0 0 1 40 0', '#4caf50', 6)}</g>`),
@@ -681,6 +795,8 @@ const TREATS = {
   cracker: V(`<rect x="18" y="18" width="64" height="64" rx="10" fill="#f6c56b" stroke="#c58a2c" stroke-width="4"/>` + [[34, 34], [50, 34], [66, 34], [34, 50], [50, 50], [66, 50], [34, 66], [50, 66], [66, 66]].map(([x, y]) => C(x, y, 2.5, '#c58a2c')).join('')),
   apple: V(L('M50 30 Q52 18 58 12', '#7a4a2e', 5) + P('M54 22 Q70 10 80 18 Q68 30 54 22Z', '#5cc06b', '#3a8a48', '', 3) + P('M50 30 Q30 18 20 38 Q12 64 30 84 Q40 94 50 86 Q60 94 70 84 Q88 64 80 38 Q70 18 50 30Z', '#ff5a5a', '#c43a3a', '', 4) + E(34, 46, 6, 10, '#fff', null, 'opacity=".5"')),
   cookie: V(C(50, 50, 36, '#e0a96d', '#a8733c') + [[36, 38], [60, 34], [64, 58], [40, 62], [52, 50]].map(([x, y]) => C(x, y, 5, '#6b3e1f')).join('')),
+  bamboo: V(`<g transform="rotate(-30 50 50)"><rect x="42" y="6" width="16" height="88" rx="6" fill="#8fd16a" stroke="#4f8a39" stroke-width="4"/>${L('M42 34 h16 M42 64 h16', '#4f8a39', 4)}${P('M58 30 Q80 18 86 28 Q72 36 58 34Z', '#5cc06b', '#3a8a48', '', 3)}</g>`),
+  lolly: V(`<rect x="46" y="54" width="8" height="42" rx="4" fill="#fff" stroke="#bbb" stroke-width="3"/>` + C(50, 36, 30, '#ff8fb1', '#d94f80') + `<g transform="translate(50 36)">${L('M0 0 a4 4 0 0 1 8 0 a8 8 0 0 1 -16 0 a12 12 0 0 1 24 0 a16 16 0 0 1 -32 0', '#fff', 5)}</g>`),
   starcookie: V(P(starPath(50, 54, 42, 20), '#ffd966', '#d4a017', '', 4) + C(42, 48, 3, '#ff8fb1') + C(58, 46, 3, '#7cc6fe') + C(50, 62, 3, '#8ee3c8'))
 };
 // ---------- UI icons ----------
@@ -697,6 +813,8 @@ const ICON = {
   gear: V(`<g fill="#9a7bb0">${[0, 45, 90, 135, 180, 225, 270, 315].map(a => `<rect x="44" y="4" width="12" height="20" rx="3" transform="rotate(${a} 50 50)"/>`).join('')}</g>` + C(50, 50, 28, '#9a7bb0') + C(50, 50, 11, '#fff')),
   lock: V(L('M32 46 V32 Q32 14 50 14 Q68 14 68 32 V46', '#d08aac', 9) + `<rect x="22" y="44" width="56" height="44" rx="10" fill="#d08aac"/>` + C(50, 64, 7, '#fff')),
   x: V(L('M28 28 L72 72 M72 28 L28 72', '#fff', 12)),
+  bag: V(P('M18 36 H82 L76 92 H24Z', '#ffd166', '#e0a020', '', 5) + L('M36 40 V28 Q36 12 50 12 Q64 12 64 28 V40', '#e0a020', 6) + P(starPath(50, 64, 16, 7), '#fff', '#fff', '', 2)),
+  check: V(L('M22 52 L42 72 L80 30', '#fff', 14)),
   arrow: V(P('M30 20 H70 V50 H86 L50 88 L14 50 H30Z', '#ffe14d', '#e0a800', '', 5))
 };
 
@@ -812,7 +930,7 @@ function elCenter(el) { const r = el.getBoundingClientRect(); return [r.left + r
    SHARED UI BITS
    ===================================================================== */
 function drawMute() { $('#mute').innerHTML = save.muted ? ICON.spkOff : ICON.spkOn; }
-function stickerHTML(sp, size) { const S = SP[sp]; return `<div class="stk ${S.gold ? 'gold' : ''}" style="${size ? `width:${size}px;height:${size}px;` : ''}background:${S.bg}">${animalSVG(sp, 'happy')}</div>`; }
+function stickerHTML(sp, size) { const S = SP[sp]; return `<div class="stk ${S.gold ? 'gold' : ''} ${S.sis ? 'sis' : ''}" style="${size ? `width:${size}px;height:${size}px;` : ''}background:${S.bg}">${animalSVG(sp, 'happy')}</div>`; }
 function progressHTML(withHome) { return `<div class="prog ${withHome ? 'withhome' : ''}">${day.patients.map((p, i) => `<div class="pdot ${p.done ? 'done' : ''} ${i === day.next && !p.done ? 'cur' : ''} ${SP[p.sp].gold ? 'gold' : ''}">${ICON.paw}</div>`).join('')}</div>`; }
 const starPill = () => `<div class="pill stars">${ICON.star}<b>${save.stars}</b></div>`;
 function bumpStars(el, val) { const p = $('.pill.stars', el); if (!p) return; $('b', p).textContent = val; p.classList.remove('bump'); void p.offsetWidth; p.classList.add('bump'); }
@@ -822,8 +940,7 @@ function roomHTML(mode) {
   let s = `<div class="wall" style="height:${FL}px"></div><div class="wains" style="top:${R1(FL - 50 * k)}px;height:${R1(50 * k)}px"></div><div class="floor" style="top:${FL}px"></div>`;
   for (const d of DECOS) {
     const r = d.pos(FL, k), st = `left:${R1(r.x)}px;top:${R1(r.y)}px;width:${R1(r.w)}px;height:${R1(r.h)}px`;
-    if (save.stars >= d.cost) s += `<div class="deco abs" data-d="${d.id}" style="${st}">${d.svg(r.w, r.h)}</div>`;
-    else if (mode === 'play') s += `<div class="deco locked abs" data-d="${d.id}" style="${st}"><div class="lk">${ICON.lock}</div><div class="cost">${ICON.star}${d.cost}</div></div>`;
+    if (save.owned[d.id]) s += `<div class="deco abs" data-d="${d.id}" style="${st}">${d.svg(r.w, r.h)}</div>`;
   }
   return s;
 }
@@ -833,12 +950,16 @@ function roomHTML(mode) {
    ===================================================================== */
 let day = null;
 function newDay() {
-  const others = ['puppy', 'bigdog', 'dachshund', 'poodle', 'kitten', 'bunny', 'hamster', 'turtle', 'parrot', 'pony', 'piglet'];
+  const others = ['puppy', 'bigdog', 'dachshund', 'poodle', 'fox', 'kitten', 'bunny', 'hamster', 'guineapig', 'turtle', 'lamb', 'duckling', 'parrot', 'penguin', 'pony', 'piglet', 'panda'];
   const bag = []; others.forEach(s => { bag.push(s); if (!save.stickers[s]) bag.push(s); });
   const chosen = []; while (chosen.length < 5) { const s = pick(bag); if (!chosen.includes(s)) chosen.push(s); }
   if (Math.random() < 0.15) chosen[4] = 'unicorn';
+  if (Math.random() < 0.5) chosen[3] = 'shiloh';          // little sister drops in about every other day
+  shuffle(chosen).forEach((s, i) => { chosen[i] = s; });
   chosen.splice(Math.floor(Math.random() * 6), 0, 'coco');
   const probs = shuffle(Object.keys(PROBLEMS)).slice(0, 6);
+  const si = chosen.indexOf('shiloh');                     // a dog biscuit is no snack for Shiloh
+  if (si >= 0 && probs[si] === 'hungry') { const j = (si + 1) % 6; [probs[si], probs[j]] = [probs[j], probs[si]]; }
   day = { patients: chosen.map((sp, i) => ({ sp, prob: probs[i], done: false })), next: 0, starsToday: 0, startStars: save.stars };
 }
 
@@ -862,9 +983,11 @@ screens.title = {
       <div class="bld abs">${BUILDING}<div class="sign-t"><div class="t1">Dr. Evie's</div><div class="t2">Animal Clinic</div></div><button class="big-play" id="tPlay" style="left:205px;top:400px" aria-label="Play">${ICON.play}</button></div>
       ${['puppy', 'bunny', 'coco'].map(sp => `<div class="pt tpet" data-sp="${sp}"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>`).join('')}
       <div class="lbl-btn" id="tRoom"><button class="icon-btn" aria-label="My Clinic">${ICON.house}</button><span>My Clinic</span></div>
+      <div class="lbl-btn" id="tShop"><button class="icon-btn yellow" aria-label="Shop">${ICON.bag}</button><span>Shop</span></div>
       <div class="gear" id="tGear">${ICON.gear}<svg viewBox="0 0 100 100"><circle class="ring" cx="50" cy="50" r="44"/></svg></div>`;
     $('#tPlay', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); newDay(); go('wait', 'start'); });
     $('#tRoom', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('room'); });
+    $('#tShop', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('shop'); });
     $$('.tpet', el).forEach(p => p.addEventListener('pointerdown', () => { Snd.init(); Music.start(); SP[p.dataset.sp].sound(); hop(p); }));
     // Parents: hold the faint gear for 3 seconds to reset progress.
     const gear = $('#tGear', el); let ht = null;
@@ -880,6 +1003,7 @@ screens.title = {
     const b = $('.bld', el); b.style.left = bx + 'px'; b.style.top = by + 'px'; b.style.transform = `scale(${bk})`;
     place($('.sun', el), W - 230, 40, 130, 130);
     const r = $('#tRoom', el); r.style.left = '20px'; r.style.top = '20px';
+    const sb = $('#tShop', el); sb.style.left = '20px'; sb.style.top = '178px';
     const ps = $$('.tpet', el), sz = port ? 250 : Math.min(190, W * 0.2);
     if (port) { place(ps[0], 40, H * 0.95 - sz, sz, sz); place(ps[1], W / 2 - sz * 0.4, H * 0.97 - sz * 0.8, sz * 0.8, sz * 0.8); place(ps[2], W - sz - 40, H * 0.95 - sz, sz, sz); place($('.sun', el), W - 230, 140, 130, 130); return; }
     place(ps[0], Math.max(4, bx - sz * 0.45), H * 0.97 - sz, sz, sz);
@@ -888,17 +1012,18 @@ screens.title = {
   }
 };
 function resetModal() {
-  const ov = h(`<div class="overlay"><div class="modal"><h2>Reset progress?</h2><p>This erases all stickers, stars and decorations on this device.</p><button id="rmNo">Cancel</button><button class="danger" id="rmYes">Reset</button></div></div>`);
+  const ov = h(`<div class="overlay"><div class="modal"><h2>Reset progress?</h2><p>This erases all stickers, stars, pets and decorations on this device.</p><button id="rmNo">Cancel</button><button class="danger" id="rmYes">Reset</button></div></div>`);
   stage.appendChild(ov);
   $('#rmNo', ov).onclick = () => ov.remove();
-  $('#rmYes', ov).onclick = () => { const m = save.muted; save = { stars: 0, stickers: {}, muted: m, days: 0 }; store(); ov.remove(); go('title'); };
+  $('#rmYes', ov).onclick = () => { save = freshSave(save.muted); store(); ov.remove(); go('title'); };
 }
 
 // ---------- WAITING ROOM ----------
 screens.wait = {
   enter(el, mode) {
-    const g = gen; this.el = el; this.ready = false;
+    const g = gen; this.el = el; this.ready = false; this.petIds = null;
     el.innerHTML = `<div class="room"></div><div class="chairs"></div><div class="wps">${day.patients.map((p, i) => `<div class="pt wp" data-i="${i}"><div class="glow"></div><div class="mv"><div class="md ${p.done ? 'idle' : moodAnim(p.prob)}" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(p.sp, p.done ? 'happy' : 'sad', p.done ? null : p.prob, 0)}</div></div></div>${p.done ? `<div class="check">${stickerHTML(p.sp)}</div>` : ''}<div class="arrow">${ICON.arrow}</div></div>`).join('')}</div>
+      <div class="petlayer"></div>
       <button class="big-play hidden" id="wGo" aria-label="Next patient">${ICON.play}</button>
       <div class="topbar"><button class="icon-btn" id="wHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button>${progressHTML(true)}<div class="tr">${starPill()}</div></div>`;
     this.layout();
@@ -943,6 +1068,8 @@ screens.wait = {
     ch.innerHTML = ss.map((s, i) => `<div class="chair" style="left:${R1(s.x - s.size * 0.45)}px;top:${R1(s.y - s.size * 0.52)}px;width:${R1(s.size * 0.9)}px;height:${R1(s.size * 0.99)}px">${chairSVG(CHAIR_COLS[i])}</div>`).join('');
     $$('.wp', el).forEach((p, i) => { const s = ss[i]; place(p, s.x - s.size / 2, s.y - s.size * 0.94, s.size, s.size); });
     const b = $('#wGo', el); b.style.left = (W / 2 - 75) + 'px'; b.style.top = Math.min(H - 170, FL + (H - FL) * 0.62) + 'px';
+    if (!this.petIds) this.petIds = shuffle(save.pets).slice(0, 3);
+    walkPets($('.petlayer', el), this.petIds, { x0: W * 0.1, x1: W * 0.9, y0: H - (H - FL) * 0.1, y1: H - 8, size: isPortrait() ? 140 : 110 });
   }
 };
 function seats() {
@@ -956,14 +1083,14 @@ function seats() {
 screens.exam = {
   enter(el) {
     const g = gen; this.el = el; const p = this.p = day.patients[day.next]; this.S = SP[p.sp]; this.prob = PROBLEMS[p.prob];
-    this.step = 0; this.wrongs = 0; this.busy = true; this.drag = null;
+    this.step = 0; this.busy = true; this.drag = null;
     const need = this.prob.tools, others = shuffle(TOOL_ORDER.filter(t => !need.includes(t))).slice(0, 7 - need.length);
     this.tools = TOOL_ORDER.filter(t => need.includes(t) || others.includes(t));
     el.innerHTML = `<div class="exam-bg"><div class="wall"></div><div class="stripe"></div><div class="floor"></div></div>
       <div class="exd abs" id="exJars">${JARS}</div><div class="exd abs" id="exChart">${CHART}</div>
       <div class="table abs">${TABLE}</div>
       <div class="pt" id="exA"><div class="mv"><div class="md"><div class="rx">${animalSVG(p.sp, 'sad', p.prob, 0)}</div></div></div></div>
-      <div class="bubble hidden"><div class="t1"></div><div class="t2"></div><div class="ic">${ICONS[p.prob]}</div><div class="w">${this.prob.word}</div></div>
+      <div class="bubble hidden"><div class="t1"></div><div class="t2"></div><div class="ic">${ICONS[p.prob === 'thorn' && this.S.human ? 'thornHand' : p.prob]}</div><div class="w">${this.prob.word}</div></div>
       <div class="tray off">${this.tools.map(t => `<div class="tool" data-t="${t}">${TOOLS[t]}</div>`).join('')}</div>
       <div class="topbar">${progressHTML(false)}<div class="tr">${starPill()}<div class="bookic">${ICON.book}</div></div></div>`;
     this.a = $('#exA', el); this.layout();
@@ -982,10 +1109,10 @@ screens.exam = {
       await wait(300, g);
       $('.tray', el).classList.remove('off');
       await wait(400, g);
-      this.busy = false; this.armHint();
+      this.busy = false;
     });
   },
-  leave() { clearTimeout(this.hintT); window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); window.removeEventListener('pointercancel', this.onUp); $$('.ghost').forEach(g => g.remove()); this.drag = null; },
+  leave() { window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); window.removeEventListener('pointercancel', this.onUp); $$('.ghost').forEach(g => g.remove()); this.drag = null; },
   layout() {
     const el = this.el, port = isPortrait(), cols = port ? 4 : 7;
     const ts = Math.floor(Math.min(port ? 175 : 135, (W - 40) / cols - 14)), rows = Math.ceil(this.tools.length / cols);
@@ -1012,9 +1139,6 @@ screens.exam = {
     if (port) { $('#exJars', el).style.top = (110) + 'px'; $('#exChart', el).style.top = (110) + 'px'; }
   },
   need() { return this.prob.tools[this.step]; },
-  armHint() { clearTimeout(this.hintT); this.hintT = setTimeout(() => this.showHint(), 8000); },
-  showHint() { if (this.busy || this.drag) { this.armHint(); return; } const t = $(`.tool[data-t="${this.need()}"]`, this.el); if (t && !t.classList.contains('hint')) { t.classList.add('hint'); SFX.chime(); } },
-  clearHint() { clearTimeout(this.hintT); $$('.tool.hint', this.el).forEach(t => t.classList.remove('hint')); },
   // ----- drag & drop (taps work too) -----
   down(e, tile) {
     if (this.busy || this.drag) return; e.preventDefault();
@@ -1049,7 +1173,7 @@ screens.exam = {
   setOver() { $('.a-over', this.a).innerHTML = overlay(this.p.prob, this.step, this.S); },
   say(txt) { const s = h(`<div class="say">${txt}</div>`); this.el.appendChild(s); s.style.left = (this.ax + this.size * 0.5 - 90) + 'px'; s.style.top = (this.ay - 30) + 'px'; setTimeout(() => s.remove(), 1400); },
   use(id, gh, tile) {
-    const g = gen; this.busy = true; this.clearHint();
+    const g = gen; this.busy = true;
     run(async () => {
       if (id === this.need()) {
         const pt = this.svgPt(anchors(this.S)[this.prob.at]);
@@ -1064,7 +1188,7 @@ screens.exam = {
         this.step++; this.setOver(); FX.sparkle(pt[0], pt[1], 24); SFX.sparkle();
         if (this.step < this.prob.tools.length) {
           this.setFace('okay'); this.md.className = 'md idle';
-          await wait(250, g); this.busy = false; this.wrongs = 0; this.armHint();
+          await wait(250, g); this.busy = false;
         } else { await this.celebrate(g); }
       } else {
         const r = this.a.getBoundingClientRect();
@@ -1078,8 +1202,7 @@ screens.exam = {
         await this.flyBack(gh, tile);
         await wait(400, g);
         this.setFace(this.step ? 'okay' : 'sad');
-        this.wrongs++; this.busy = false;
-        if (this.wrongs >= 2) this.showHint(); else this.armHint();
+        this.busy = false;
       }
     });
   },
@@ -1126,18 +1249,17 @@ screens.exam = {
 screens.closed = {
   enter(el) {
     const g = gen; this.el = el; save.days = (save.days || 0) + 1; store();
-    const unl = DECOS.filter(d => d.cost > day.startStars && d.cost <= save.stars);
     el.innerHTML = `<div class="room"></div><div class="abs" style="inset:0;background:#ffffff66"></div>
       <div class="center"><div class="panel pop-in">
         <div class="ptitle">Great job, Dr. Evie!</div>
         <div class="srow">${day.patients.map(p => `<div class="sslot" style="transform:scale(0)">${stickerHTML(p.sp)}</div>`).join('')}</div>
         <div class="starsrow">${ICON.star}<span>+${day.starsToday}</span></div>
-        ${unl.length ? `<div class="newrow"><div class="newlbl">New!</div>${unl.map(d => `<div class="newdeco">${d.svg(130, 60)}</div>`).join('')}</div>` : ''}
-        <div class="btns"><button class="big-play replay" id="cAgain" aria-label="Play again">${ICON.replay}</button><button class="icon-btn" id="cRoom" aria-label="My Clinic">${ICON.house}</button></div>
+        <div class="btns"><button class="icon-btn" id="cRoom" aria-label="My Clinic">${ICON.house}</button><button class="big-play replay" id="cAgain" aria-label="Play again">${ICON.replay}</button><button class="icon-btn yellow" id="cShop" aria-label="Shop">${ICON.bag}</button></div>
       </div></div>`;
     this.layout();
     $('#cAgain', el).addEventListener('click', () => { SFX.pop(); newDay(); go('wait', 'start'); });
     $('#cRoom', el).addEventListener('click', () => { SFX.pop(); go('room'); });
+    $('#cShop', el).addEventListener('click', () => { SFX.pop(); go('shop'); });
     run(async () => {
       SFX.fanfare(); FX.confetti(160);
       await wait(700, g);
@@ -1152,29 +1274,28 @@ screens.closed = {
 screens.room = {
   enter(el) {
     this.el = el;
-    const collected = ORDER.filter(s => s !== 'coco' && save.stickers[s]);
-    this.pets = ['coco', ...shuffle(collected).slice(0, 4)];
-    el.innerHTML = `<div class="room"></div><div class="pets">${this.pets.map(sp => `<div class="pt rpet" data-sp="${sp}"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>`).join('')}</div>
+    el.innerHTML = `<div class="room"></div><div class="pets"><div class="pt rpet" data-sp="coco"><div class="mv"><div class="md idle"><div class="rx">${animalSVG('coco', 'happy')}</div></div></div></div></div><div class="petlayer"></div>
       <div class="topbar"><button class="icon-btn" id="rHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button><div class="tr">${starPill()}</div></div>
-      <button class="bookbtn" id="rBook" aria-label="Sticker book">${ICON.book}</button>`;
+      <button class="bookbtn" id="rBook" aria-label="Sticker book">${ICON.book}</button><button class="bookbtn shopbtn" id="rShop" aria-label="Shop">${ICON.bag}</button>`;
     this.layout();
     $('#rHome', el).addEventListener('click', () => { SFX.pop(); go('title'); });
     $('#rBook', el).addEventListener('click', () => { SFX.pop(); openBook(); });
+    $('#rShop', el).addEventListener('click', () => { SFX.pop(); go('shop'); });
     $('.room', el).addEventListener('pointerdown', e => { const d = e.target.closest('.deco'); if (d) decoTap(d); });
     $$('.rpet', el).forEach(p => p.addEventListener('pointerdown', () => { SP[p.dataset.sp].sound(); hop(p); FX.hearts(...elCenter(p), 4); }));
   },
   layout() {
     const el = this.el; $('.room', el).innerHTML = roomHTML('play');
-    const FL = floorLine(), n = this.pets.length, size = Math.min(170, W * 0.6 / n + 20), y = FL + (H - FL) * 0.57;
-    $$('.rpet', el).forEach((p, i) => { const x = W * 0.2 + W * 0.6 * (i + 0.5) / n; place(p, x - size / 2, y - size * 0.95, size, size); });
-    place($('#rBook', el), W / 2 - 65, Math.min(H - 150, FL + (H - FL) * 0.7), 130, 130);
-    if (!isPortrait()) place($('#rBook', el), 24, FL - 170, 130, 130);
+    const FL = floorLine(), port = isPortrait(), cs = port ? 190 : 160;
+    place($('.rpet', el), W / 2 - cs / 2, FL + (H - FL) * 0.55 - cs * 0.95, cs, cs);
+    walkPets($('.petlayer', el), save.pets, { x0: W * 0.08, x1: W * 0.92, y0: FL + (H - FL) * 0.4, y1: H - 8, size: port ? 170 : 135 });
+    if (port) { place($('#rBook', el), W / 2 - 150, FL - 160, 130, 130); place($('#rShop', el), W / 2 + 20, FL - 160, 130, 130); }
+    else { place($('#rBook', el), W - 300, FL - 160, 130, 130); place($('#rShop', el), W - 155, FL - 160, 130, 130); }
   }
 };
 function decoTap(d) {
   const id = d.dataset.d, [x, y] = elCenter(d);
   const anim = c => { d.classList.remove('tap', 'shake', 'floaty'); void d.offsetWidth; d.classList.add(c); };
-  if (d.classList.contains('locked')) { anim('shake'); SFX.boop(); return; }
   switch (id) {
     case 'plant': anim('tap'); d.classList.toggle('bloom'); SFX.sparkle(); FX.sparkle(x, y - d.offsetHeight * SC * 0.3, 12); break;
     case 'fishtank': anim('tap'); SFX.bubbles(); FX.bubbles(x, y, 14); break;
@@ -1192,11 +1313,97 @@ function openBook() {
   stage.appendChild(ov);
   $('.x', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
   ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
-  $$('.bslot', ov).forEach(s => s.addEventListener('pointerdown', () => {
+  $$('.bslot', ov).forEach(s => s.addEventListener('click', () => {
     s.classList.remove('hopit'); void s.offsetWidth; s.classList.add('hopit');
     if (s.classList.contains('empty')) SFX.boop(); else { SP[s.dataset.sp].sound(); FX.sparkle(...elCenter(s), 10); }
   }));
 }
+
+/* =====================================================================
+   WALKING PETS — bought in the shop, they wander the clinic floor.
+   ===================================================================== */
+function walkPets(layer, ids, z) {
+  const g = gen; layer.innerHTML = '';
+  const pets = ids.map((sp, i) => {
+    const y = ids.length > 1 ? z.y0 + (z.y1 - z.y0) * i / (ids.length - 1) : z.y1;
+    const el = h(`<div class="pt pet" style="z-index:${Math.round(y)}"><div class="flip"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div></div>`);
+    layer.appendChild(el);
+    const p = { sp, el, flip: $('.flip', el), md: $('.md', el), x: rand(z.x0, z.x1), tx: 0, wait: rand(0.3, 2.5), speed: rand(55, 85) };
+    place(el, p.x - z.size / 2, y - z.size * 0.95, z.size, z.size);
+    el.addEventListener('pointerdown', () => { SP[sp].sound(); hop(el); FX.hearts(...elCenter(el), 5); p.wait = 1.2; p.md.className = 'md idle'; });
+    return p;
+  });
+  let last = performance.now();
+  const step = t => {
+    if (g !== gen || !layer.isConnected || layer.childElementCount !== pets.length || (pets[0] && !pets[0].el.isConnected)) return;
+    const dt = Math.min(0.05, (t - last) / 1000); last = t;
+    for (const p of pets) {
+      if (p.wait > 0) {
+        p.wait -= dt;
+        if (p.wait <= 0) { p.tx = rand(z.x0, z.x1); p.md.className = 'md walk'; p.flip.classList.toggle('left', p.tx < p.x); }
+        continue;
+      }
+      const d = p.tx - p.x, s = p.speed * dt;
+      if (Math.abs(d) <= s) { p.x = p.tx; p.wait = rand(1.5, 4.5); p.md.className = 'md idle'; } else p.x += Math.sign(d) * s;
+      p.el.style.left = R1(p.x - z.size / 2) + 'px';
+    }
+    requestAnimationFrame(step);
+  };
+  if (pets.length) requestAnimationFrame(step);
+}
+
+/* =====================================================================
+   SHOP — spend stars on pets and clinic decorations.
+   ===================================================================== */
+const SHOP_PETS = [['hamster', 30], ['duckling', 30], ['turtle', 30], ['guineapig', 35], ['puppy', 40], ['kitten', 40], ['bunny', 40], ['lamb', 45], ['piglet', 50],
+  ['fox', 60], ['penguin', 70], ['panda', 80], ['unicorn', 150]].map(([sp, cost]) => ({ key: 'pet:' + sp, kind: 'pet', sp, cost }));
+const SHOP_DECOS = () => DECOS.slice().sort((a, b) => a.cost - b.cost).map(d => ({ key: 'deco:' + d.id, kind: 'deco', d, cost: d.cost }));
+const shopOwned = it => it.kind === 'pet' ? save.pets.includes(it.sp) : !!save.owned[it.d.id];
+const shopPic = it => it.kind === 'pet' ? animalSVG(it.sp, 'happy') : it.d.svg(140, 120);
+screens.shop = {
+  enter(el, tab) {
+    this.el = el; this.tab = tab || 'pets';
+    el.innerHTML = `<div class="shop-bg"></div><div class="awning"></div><div class="shop-sign">Shop</div>
+      <div class="topbar"><button class="icon-btn" id="sBack" style="left:16px;top:16px" aria-label="My Clinic">${ICON.house}</button><div class="tr">${starPill()}</div></div>
+      <div class="tabs"><button class="tab" data-tab="pets" aria-label="Pets">${ICON.paw}</button><button class="tab" data-tab="deco" aria-label="Decorations">${ICON.home.replace(/#fff/g, '#b79cff')}</button></div>
+      <div class="sgrid"></div>`;
+    $('#sBack', el).addEventListener('click', () => { SFX.pop(); go('room'); });
+    $$('.tab', el).forEach(t => t.addEventListener('click', () => { SFX.pop(); this.tab = t.dataset.tab; this.render(); }));
+    this.render();
+  },
+  items() { return this.tab === 'pets' ? SHOP_PETS : SHOP_DECOS(); },
+  render() {
+    const el = this.el;
+    $$('.tab', el).forEach(t => t.classList.toggle('on', t.dataset.tab === this.tab));
+    const g = $('.sgrid', el);
+    g.innerHTML = this.items().map(it => { const own = shopOwned(it);
+      return `<div class="card ${own ? 'owned' : save.stars < it.cost ? 'poor' : ''}" data-k="${it.key}"><div class="pic">${shopPic(it)}</div>${own ? `<div class="got">${ICON.check}</div>` : `<div class="price">${ICON.star}<b>${it.cost}</b></div>`}</div>`; }).join('');
+    $$('.card', g).forEach(c => c.addEventListener('click', () => this.tap(c)));
+    $('.pill.stars b', el).textContent = save.stars;
+  },
+  tap(c) {
+    const it = this.items().find(i => i.key === c.dataset.k); if (!it) return;
+    const bounce = cls => { c.classList.remove('shake', 'hopit'); void c.offsetWidth; c.classList.add(cls); };
+    if (shopOwned(it)) { bounce('hopit'); if (it.kind === 'pet') SP[it.sp].sound(); else SFX.chime(); return; }
+    if (save.stars < it.cost) { bounce('shake'); SFX.boop(); return; }
+    SFX.pop();
+    const ov = h(`<div class="overlay"><div class="buy"><div class="big">${shopPic(it)}</div><div class="row"><button class="icon-btn no" aria-label="No">${ICON.x}</button><button class="yes" aria-label="Buy">${ICON.star}<b>${it.cost}</b></button></div></div></div>`);
+    stage.appendChild(ov);
+    if (it.kind === 'pet') SP[it.sp].sound();
+    $('.no', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
+    ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
+    $('.yes', ov).addEventListener('click', () => {
+      if (save.stars < it.cost || shopOwned(it)) { ov.remove(); return; }
+      save.stars -= it.cost;
+      if (it.kind === 'pet') save.pets.push(it.sp); else save.owned[it.d.id] = true;
+      store(); ov.remove(); SFX.coin(); setTimeout(() => SFX.cheer(), 250); FX.confetti(90);
+      this.render();
+      const nc = $(`.card[data-k="${it.key}"]`, this.el);
+      if (nc) { nc.classList.add('hopit'); FX.sparkle(...elCenter(nc), 24); }
+      if (it.kind === 'pet') setTimeout(() => SP[it.sp].sound(), 600);
+    });
+  }
+};
 
 /* =====================================================================
    START
