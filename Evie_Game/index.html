@@ -384,6 +384,18 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .medalpop .mc{display:flex;align-items:center;gap:6px;font-size:44px;color:#c98a10}
 .medalpop .mc svg{width:52px;height:52px}
 .card.wallon{box-shadow:0 0 0 6px #ff8fb1,0 7px 0 #8ee3a0}
+.walkbtn{position:relative;width:72px;height:72px;padding:12px;background:#ff9f43;box-shadow:0 6px 0 #d9731b}
+.wtrees{position:absolute;left:0;display:flex;animation:wscroll 7s linear infinite}
+.wtrees .wt{flex:0 0 auto;width:200px;height:300px;margin-right:140px}
+.wtrees .wt svg{width:100%;height:100%}
+@keyframes wscroll{to{transform:translateX(var(--wd))}}
+.wpath{position:absolute;left:0;width:100%;height:90px;background:repeating-linear-gradient(90deg,#e8c99a 0 60px,#dcb984 60px 120px);border-top:6px solid #f3dcb4;animation:wpath .9s linear infinite}
+@keyframes wpath{to{background-position:-120px 0}}
+.wgood{position:absolute;width:84px;height:84px;transition:left 4.5s linear;cursor:pointer;z-index:3}
+.wgood svg{width:100%;height:100%}
+.wchoose{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.wchoose button{width:150px;height:170px;border-radius:28px;background:#fff;box-shadow:0 6px 0 #ffd166;display:flex;flex-direction:column;align-items:center;padding:8px;font-size:24px;color:#a05a80}
+.wchoose button svg{width:120px;height:120px}
 .toast{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:80;font-size:46px;color:#7a5cff;background:#fff;border-radius:34px;padding:10px 30px;box-shadow:0 8px 20px rgba(0,0,0,.2);pointer-events:none;animation:fadeIn .2s;white-space:nowrap}
 /* ---------- adoption center ---------- */
 .adopt-bg .wall{position:absolute;left:0;top:0;width:100%;background:#e6f8ef;background-image:radial-gradient(#cdeedd 14%,transparent 15%);background-size:60px 60px}
@@ -1083,6 +1095,7 @@ const ICON = {
   medal: V(P('M30 6 L44 40 L56 40 L42 6Z', '#4aa3ff') + P('M70 6 L56 40 L44 40 L58 6Z', '#ff6b8a') + C(50, 62, 30, '#ffd84a', '#c99a10', '', 5) + P(starPath(50, 63, 16, 7), '#fff3b0', '#e0b020', '', 2)),
   potty: V(P('M50 8 Q22 50 24 66 Q28 92 50 92 Q72 92 76 66 Q78 50 50 8Z', '#ffe066', '#e0a800', '', 4) + E(40, 62, 6, 10, '#fff', null, 'opacity=".6"')),
   phouse: V(P('M50 10 L92 46 H80 V90 H20 V46 H8Z', '#fff', '#fff', '', 4) + C(50, 70, 9, '#5cc06b') + C(39, 58, 4.5, '#5cc06b') + C(46, 53, 4.5, '#5cc06b') + C(54, 53, 4.5, '#5cc06b') + C(61, 58, 4.5, '#5cc06b')),
+  walk: V([[22, 78, -20], [42, 58, 10], [60, 38, -20], [80, 18, 10]].map(([x, y, a]) => `<g transform="translate(${x} ${y}) rotate(${a}) scale(.42)">${C(0, 8, 16, '#fff') + C(-14, -10, 7, '#fff') + C(-4, -18, 7, '#fff') + C(8, -18, 7, '#fff') + C(17, -10, 7, '#fff')}</g>`).join('')),
   check: V(L('M22 52 L42 72 L80 30', '#fff', 14)),
   arrow: V(P('M30 20 H70 V50 H86 L50 88 L14 50 H30Z', '#ffe14d', '#e0a800', '', 5))
 };
@@ -1963,12 +1976,13 @@ screens.house = {
       <div class="hdecor"></div><div class="hitems"></div><div class="puddles"></div><div class="hpets"></div><div class="hnight"></div>
       <div class="topbar"><button class="icon-btn" id="hHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button>
         <button class="pshop" id="hShop">${ICON.bag}<span>Pet Shop</span></button>
-        <div class="tr"><button class="peebtn hidden" id="hPee">${ICON.potty}<span>Take out to pee</span></button><button class="icon-btn moonbtn" id="hMoon" aria-label="Bedtime">${ICON.moon}</button><div class="pill coins">${ICON.coin}<b>0</b></div></div></div>
+        <div class="tr"><button class="peebtn hidden" id="hPee">${ICON.potty}<span>Take out to pee</span></button><button class="icon-btn walkbtn" id="hWalk" aria-label="Go for a walk">${ICON.walk}</button><button class="icon-btn moonbtn" id="hMoon" aria-label="Bedtime">${ICON.moon}</button><div class="pill coins">${ICON.coin}<b>0</b></div></div></div>
       <div class="hempty hidden">${ICON.arrow.replace('<svg', '<svg style="width:46px;height:46px;transform:rotate(180deg)"')}<span>Get a pet!</span></div>`;
     $('#hHome', el).addEventListener('click', () => { SFX.pop(); go('title'); });
     $('#hShop', el).addEventListener('click', () => { SFX.pop(); go('petshop'); });
     $('#hPee', el).addEventListener('click', () => this.peeWalk());
     $('#hMoon', el).addEventListener('click', () => this.bedtime());
+    $('#hWalk', el).addEventListener('click', () => this.walk());
     if (mode === 'in' && save.house) this.start(); else this.menu();
   },
   leave() { clearInterval(this.tick); },
@@ -2113,6 +2127,44 @@ screens.house = {
       SFX.cheer(); FX.sparkle(innerWidth / 2, innerHeight / 3, 30); toast(`Good morning! +${gain}`);
       $('.pill.coins b', this.el).textContent = save.house.coins; coinPop($('.pill.coins', this.el));
       for (const e of this.ents) { e.wait = rand(0.5, 2); this.refresh(e); speak(e.art, e.el); }
+    });
+  },
+  walk() {   // pick a pet, then off to the park
+    const list = (this.ents || []).filter(e => !e.p.hurt);
+    if (this.sleeping || !list.length) { SFX.boop(); return; }
+    SFX.pop();
+    if (list.length === 1) { this.goWalk(list[0]); return; }
+    const ov = h(`<div class="overlay"><div class="panel pop-in"><div class="hpic" style="height:110px;width:110px">${ICON.walk.replace(/#fff/g, '#ff9f43')}</div><div class="wchoose">${list.map((e, i) => `<button data-i="${i}">${hpetSVG(e.p)}<span>${e.p.name}</span></button>`).join('')}</div></div></div>`);
+    stage.appendChild(ov);
+    ov.addEventListener('pointerdown', ev => { if (ev.target === ov) ov.remove(); });
+    $$('.wchoose button', ov).forEach(b => b.addEventListener('click', () => { ov.remove(); this.goWalk(list[+b.dataset.i]); }));
+  },
+  goWalk(e) {
+    const p = e.p;
+    if (Date.now() - (p.walked || 0) < 60000) { SFX.boop(); speak(e.art, e.el); toast(`${p.name} needs a rest!`); return; }
+    const g = gen, n = Math.ceil(W / 340) + 1, gy = H * 0.66, ps = isPortrait() ? 260 : 220;
+    const trees = [...Array(n * 2)].map(() => `<div class="wt">${TREE}</div>`).join('');
+    const sc = h(`<div class="yard"><div class="ysky"></div><div class="wtrees" style="top:${R1(H * 0.6 - 290)}px;--wd:${-n * 340}px">${trees}</div><div class="ygrass"></div><div class="wpath" style="top:${R1(gy)}px"></div><div class="wgoods"></div>
+      <div class="pt wpet" style="left:${R1(W * 0.3 - ps / 2)}px;top:${R1(gy + 70 - ps * 0.95)}px;width:${ps}px;height:${ps}px;z-index:2"><div class="mv"><div class="md ${({ hop: 'hop2', slither: 'slither', fly: 'flyb' }[e.move] || 'walk')}"><div class="rx">${hpetSVG(p)}</div></div></div></div></div>`);
+    stage.appendChild(sc); speak(e.art, sc); p.walked = Date.now(); store();
+    const pet = $('.wpet', sc); pet.addEventListener('click', () => { hop(pet); speak(e.art, pet); });
+    const goods = [ICON.coin, TREATS.bone, TREATS.berry, ICON.coin];
+    let found = 0;
+    run(async () => {
+      for (let t = 0; t < 8; t++) {   // goodies come along the path
+        const gd = h(`<div class="wgood" style="left:${W + 20}px;top:${R1(gy - 10)}px">${pick(goods)}</div>`);
+        $('.wgoods', sc).appendChild(gd);
+        requestAnimationFrame(() => requestAnimationFrame(() => { gd.style.left = '-120px'; }));
+        gd.addEventListener('click', () => { if (gd.dataset.got) return; gd.dataset.got = 1; found++; save.house.coins += 2; store(); coinPop(gd); FX.sparkle(...elCenter(gd), 10); gd.remove(); hop(pet); });
+        setTimeout(() => gd.remove(), 4800);
+        await wait(rand(900, 1400), g);
+      }
+      await wait(1200, g);
+      $('.md', pet).className = 'md dance'; speak(e.art, pet);
+      save.house.coins += 10; store(); coinPop(pet); FX.confetti(60);
+      const ban = h(`<div class="banner">Great walk!</div>`); ban.style.top = (H * 0.14) + 'px'; sc.appendChild(ban);
+      await wait(2200, g); sc.remove();
+      $('.pill.coins b', this.el).textContent = save.house.coins;
     });
   },
   peeWalk() {
