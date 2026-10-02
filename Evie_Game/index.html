@@ -304,6 +304,67 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .album .polaroid:nth-child(even){transform:rotate(3deg)}
 .album .polaroid.hopit{animation:hop .45s}
 .album .none{width:200px;height:200px;opacity:.25;margin:40px auto}
+/* ---------- pet house ---------- */
+.hbg .wall{position:absolute;left:0;top:0;width:100%;background:repeating-linear-gradient(90deg,#fff3dc 0 44px,#ffeacc 44px 88px)}
+.hbg .floor{position:absolute;left:0;bottom:0;width:100%;background:#e3bd92;background-image:repeating-linear-gradient(0deg,#e3bd92 0 56px,#d9b084 56px 60px);border-top:10px solid #fff}
+.hitems,.puddles,.hpets{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.hitems{z-index:2}.puddles{z-index:3}.hpets{z-index:4}
+.hitems>*,.puddles>*,.hpets>*{pointer-events:auto}
+.hdeco svg,.hitem svg,.hcage svg{width:100%;height:100%;overflow:visible}
+.hitem.tap{animation:boing2 .5s}
+.pshop{position:absolute;left:108px;top:18px;height:72px;border-radius:36px;background:#ffc94d;box-shadow:0 6px 0 #e0a020;display:flex;align-items:center;gap:8px;padding:0 24px 0 12px;font-size:32px;color:#fff;text-shadow:0 2px 0 #c98a10;white-space:nowrap}
+.pshop svg{width:52px;height:52px}
+.peebtn{height:72px;border-radius:36px;background:#e8f6ff;box-shadow:0 6px 0 #9fd0f0;display:flex;align-items:center;gap:6px;padding:0 20px 0 10px;font-size:24px;color:#3b7fb8;opacity:.6;white-space:nowrap}
+.peebtn.need{opacity:1;background:#ffe066;box-shadow:0 6px 0 #e0a800;color:#7a5200;animation:pulse 1s infinite}
+.peebtn.shake{animation:shake2 .4s}
+.peebtn svg{width:48px;height:48px}
+.pill.coins{color:#c98a10}
+.hpet .wantb{position:absolute;left:50%;top:-30%;width:88px;margin-left:-44px;background:#fff;border-radius:22px;border:4px solid #ffb3cd;display:flex;flex-direction:column;align-items:center;padding:4px 2px;pointer-events:none;animation:popIn .4s cubic-bezier(.3,1.6,.5,1)}
+.hpet .wantb:empty{display:none}
+.wantb .wi{width:50px;height:50px}
+.wantb .wi svg{width:100%;height:100%}
+.wantb small{font-size:17px;color:#ff5d8f;line-height:1.1}
+.md.hop2{animation:hop2 .5s ease-in-out infinite}
+@keyframes hop2{0%,100%{transform:translateY(0) scale(1.06,.94)}50%{transform:translateY(-24%) scale(.95,1.05)}}
+.md.slither{animation:slither .5s ease-in-out infinite}
+@keyframes slither{0%,100%{transform:skewX(-7deg)}50%{transform:skewX(7deg)}}
+.md.flyb{animation:flyb .28s ease-in-out infinite}
+@keyframes flyb{50%{transform:translateY(-7%) rotate(-5deg)}}
+.puddle{position:absolute;height:34px;border-radius:50%;background:radial-gradient(#fff7b0,#ffe066 60%,#f2cf3a);opacity:.92;z-index:3;cursor:pointer;animation:popIn .5s}
+.yard{position:absolute;inset:0;z-index:70;animation:fadeIn .4s}
+.yard .ysky{position:absolute;inset:0;background:linear-gradient(#9fdcff,#d8f2ff)}
+.yard .ygrass{position:absolute;left:0;bottom:0;width:100%;height:40%;background:#8fdc7a;border-top:10px solid #a6e98f}
+.yard .ypud{position:absolute;height:36px;border-radius:50%;background:#ffe066;opacity:.9;transform:scale(0);transition:transform 1.4s}
+.yard .ydog{transition:left 1.5s ease-out}
+.hcare{gap:12px}
+.lvls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:640px}
+.lv{background:#fff;border-radius:18px;padding:4px 12px;font-size:22px;color:#7a5cff;box-shadow:0 3px 0 #e0d6ff;display:flex;gap:6px;align-items:center}
+.lv b{background:#b79cff;color:#fff;border-radius:12px;padding:0 8px}
+.lv.hot{box-shadow:0 0 0 4px #ff8fb1;color:#ff5d8f}
+.lv.bump{animation:bump .5s}
+.hrow{display:flex;align-items:center;gap:20px}
+.hcare .cpet{width:240px;height:240px}
+.wantbig{display:flex;flex-direction:column;align-items:center;background:#fff;border:6px solid #ffb3cd;border-radius:30px;padding:10px 16px;min-width:150px}
+.wantbig .wi{width:90px;height:90px}
+.wantbig .wi svg{width:100%;height:100%}
+.wantbig span{font-size:28px;color:#ff5d8f}
+.itray{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;max-width:720px}
+.itray button{width:92px;height:92px;border-radius:24px;background:#fff;padding:12px;box-shadow:0 6px 0 #ffd166}
+.itray button svg{width:100%;height:100%}
+.itray button.shake{animation:shake2 .4s}
+.card .mini{position:absolute;top:6px;right:6px;display:flex;gap:2px}
+.card .mini span{width:34px;height:34px;display:block}
+.card .mini svg{width:100%;height:100%}
+.card .free{font-size:30px;color:#fff;background:#5cc06b;border-radius:20px;padding:2px 16px}
+.hstart{display:flex;gap:30px;flex-wrap:wrap;justify-content:center}
+.hstart button{font-size:40px;padding:20px 36px;border-radius:30px;color:#fff}
+.hstart .rs{background:#ff8fb1;box-shadow:0 7px 0 #d94f80}
+.hstart .ct{background:#5cc06b;box-shadow:0 7px 0 #3a8a48}
+.hstart .ct:disabled{opacity:.35}
+.hpic{width:220px;height:200px}
+.hpic svg{width:100%;height:100%}
+.hempty{position:absolute;left:100px;top:112px;display:flex;align-items:center;gap:10px;font-size:34px;color:#ff5d8f;background:#fff;border-radius:24px;padding:8px 22px;box-shadow:0 6px 16px rgba(0,0,0,.12);z-index:19;animation:arrowB 1s ease-in-out infinite}
+.toast{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:80;font-size:46px;color:#7a5cff;background:#fff;border-radius:34px;padding:10px 30px;box-shadow:0 8px 20px rgba(0,0,0,.2);pointer-events:none;animation:fadeIn .2s;white-space:nowrap}
 /* ---------- adoption center ---------- */
 .adopt-bg .wall{position:absolute;left:0;top:0;width:100%;background:#e6f8ef;background-image:radial-gradient(#cdeedd 14%,transparent 15%);background-size:60px 60px}
 .adopt-bg .floor{position:absolute;left:0;bottom:0;width:100%;background:#d8eec8;background-image:repeating-linear-gradient(90deg,transparent 0 118px,#c4e2b0 118px 122px)}
@@ -341,6 +402,8 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
   <div class="screen" id="s-room"></div>
   <div class="screen" id="s-shop"></div>
   <div class="screen" id="s-adopt"></div>
+  <div class="screen" id="s-house"></div>
+  <div class="screen" id="s-petshop"></div>
   <button class="icon-btn" id="mute" aria-label="Sound on or off"></button>
 </div>
 <canvas id="fx"></canvas>
@@ -514,6 +577,9 @@ const SFX = {
   clap() { for (const at of [0, 0.15]) nz({ dur: 0.06, vol: 0.32, filt: ['bandpass', 1800, 1], at }); },
   shutter() { nz({ dur: 0.04, vol: 0.35, filt: ['highpass', 2500, 1] }); nz({ dur: 0.05, vol: 0.3, filt: ['bandpass', 1500, 1], at: 0.08 }); },
   rawr() { tone({ type: 'sawtooth', f: 300, pts: [[0.15, 430], [0.45, 250]], dur: 0.5, vol: 0.2, vib: [30, 40], filt: ['bandpass', 900, 2] }); setTimeout(() => SFX.sneeze(), 550); setTimeout(() => SFX.sparkle(), 950); },
+  ribbit() { for (const at of [0, 0.2]) tone({ type: 'sawtooth', f: 180, pts: [[0.08, 250]], dur: 0.13, vol: 0.25, vib: [40, 30], filt: ['bandpass', 900, 4], at }); },
+  hiss() { nz({ dur: 0.75, vol: 0.16, a: 0.1, hold: 0.35, filt: ['highpass', 3500, 1] }); },
+  tinkle() { for (let i = 0; i < 10; i++) tone({ f: 1900 - i * 70 + rand(-60, 60), dur: 0.06, vol: 0.06, at: i * 0.1 }); nz({ dur: 1.0, vol: 0.04, a: 0.1, hold: 0.6, filt: ['highpass', 5000, 1] }); },
   coin() { tone({ type: 'square', f: 988, dur: 0.1, vol: 0.08, filt: ['lowpass', 3000, 1] }); tone({ type: 'square', f: 1319, dur: 0.4, vol: 0.08, at: 0.09, filt: ['lowpass', 3000, 1] }); nz({ dur: 0.25, vol: 0.05, filt: ['highpass', 6000, 1], at: 0.05 }); }
 };
 const TOOL_SFX = { tweezers: 'tweeze', spray: 'spray', bandage: 'slap', ice: 'clink', spoon: 'gulp', tissue: 'honk', thermo: 'beep', steth: 'heartbeat', cuddle: 'aww', blankie: 'whoosh', toy: 'squeakToy', snack: 'nom' };
@@ -787,6 +853,17 @@ def('nurse', { name: 'Ben', human: true, bg: '#dff7f0', treat: 'lolly', sound: (
       + E(150, 98, 57, 56, sk, OUT(sk))
       + P('M92 90 Q88 38 150 32 Q212 38 208 90 Q202 68 186 60 Q176 72 160 64 Q142 76 122 62 Q104 70 92 90Z', hr, ho, '', 3)
       + L('M146 34 q4 -16 20 -16', ho, 9) + L('M146 34 q4 -16 20 -16', hr, 5); } });
+def('snake', { bg: '#e3f6dc', treat: 'berry', sound: () => SFX.hiss(),
+  face: { ex: 30, ey: 108, er: 14, ny: 132, my: 146, nose: 'dots', bx: 50, by: 126 },
+  draw() { const c = '#7bc96f', d = '#4f9a45', b = '#eaf5a8';
+    const coil = (cy, rx, ry) => E(150, cy, rx, ry, c, OUT(c)) + E(150, R1(cy + ry * 0.35), R1(rx * 0.8), R1(ry * 0.4), b) + [-0.6, -0.2, 0.2, 0.6].map(k => E(R1(150 + rx * k), R1(cy - ry * 0.3), 8, 5, d)).join('');
+    return thick('M236 268 Q282 264 276 236', c, 14) + coil(266, 104, 26) + coil(236, 86, 24) + coil(208, 66, 22) + thick('M150 204 V160', c, 40) + E(150, 118, 66, 52, c, OUT(c)) + E(150, 136, 40, 20, '#9ad98c'); } });
+def('frog', { bg: '#e0f7d6', treat: 'berry', sound: () => SFX.ribbit(),
+  face: { ex: 50, ey: 98, er: 16, ny: 146, my: 170, nose: 'dots', bx: 74, by: 162 },
+  draw() { const c = '#7fd36b', b = '#d9f5b8';
+    const leg = `<g transform="rotate(-20 78 262)">${E(78, 262, 36, 18, c, OUT(c))}</g>` + E(54, 284, 18, 8, c, OUT(c));
+    const eye = C(100, 98, 32, c, OUT(c));
+    return leg + mirror(leg) + E(150, 236, 80, 54, c, OUT(c)) + E(150, 248, 54, 36, b) + E(122, 282, 16, 8, c, OUT(c)) + E(178, 282, 16, 8, c, OUT(c)) + eye + mirror(eye) + E(150, 150, 98, 60, c, OUT(c)) + E(150, 172, 60, 24, b, null, 'opacity=".5"'); } });
 function speak(sp, el) {
   const S = SP[sp]; S.sound();
   if (S.sparkleSneeze && el) setTimeout(() => { const sv = $('svg', el); if (!sv || !sv.isConnected) return; const r = sv.getBoundingClientRect(), n = anchors(S).nose; FX.sparkle(r.left + n[0] / 300 * r.width, r.top + n[1] / 300 * r.height, 26); }, 950);
@@ -978,6 +1055,9 @@ const ICON = {
   adopt: V(P(heartPath(50, 54, 44), '#ff6fa0', '#d94f80', '', 5) + C(50, 64, 11, '#fff') + C(36, 48, 5.5, '#fff') + C(45, 41, 5.5, '#fff') + C(55, 41, 5.5, '#fff') + C(64, 48, 5.5, '#fff')),
   adoptW: V(P(heartPath(50, 54, 44), '#fff', '#fff', '', 5) + C(50, 64, 11, '#ff6fa0') + C(36, 48, 5.5, '#ff6fa0') + C(45, 41, 5.5, '#ff6fa0') + C(55, 41, 5.5, '#ff6fa0') + C(64, 48, 5.5, '#ff6fa0')),
   sponge: V(`<rect x="16" y="34" width="68" height="44" rx="14" fill="#ffd166" stroke="#e0a020" stroke-width="5"/>` + C(34, 50, 5, '#e0a020') + C(56, 60, 6, '#e0a020') + C(70, 46, 4, '#e0a020') + C(28, 22, 9, '#bfe9ff', '#7cc6fe', '', 3) + C(48, 14, 6, '#bfe9ff', '#7cc6fe', '', 3) + C(80, 22, 7, '#bfe9ff', '#7cc6fe', '', 3)),
+  coin: V(C(50, 50, 42, '#ffd84a', '#c99a10', '', 6) + C(50, 50, 29, 'none', '#e8b820', '', 4) + P(starPath(50, 52, 17, 8), '#fff3b0', '#e8b820', '', 2)),
+  potty: V(P('M50 8 Q22 50 24 66 Q28 92 50 92 Q72 92 76 66 Q78 50 50 8Z', '#ffe066', '#e0a800', '', 4) + E(40, 62, 6, 10, '#fff', null, 'opacity=".6"')),
+  phouse: V(P('M50 10 L92 46 H80 V90 H20 V46 H8Z', '#fff', '#fff', '', 4) + C(50, 70, 9, '#5cc06b') + C(39, 58, 4.5, '#5cc06b') + C(46, 53, 4.5, '#5cc06b') + C(54, 53, 4.5, '#5cc06b') + C(61, 58, 4.5, '#5cc06b')),
   check: V(L('M22 52 L42 72 L80 30', '#fff', 14)),
   arrow: V(P('M30 20 H70 V50 H86 L50 88 L14 50 H30Z', '#ffe14d', '#e0a800', '', 5))
 };
@@ -1155,10 +1235,12 @@ screens.title = {
       ${['puppy', 'bunny', 'coco'].map(sp => `<div class="pt tpet" data-sp="${sp}"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>`).join('')}
       <div class="lbl-btn" id="tRoom"><button class="icon-btn" aria-label="My Clinic">${ICON.house}</button><span>My Clinic</span></div>
       <div class="lbl-btn" id="tAdopt"><button class="icon-btn" style="background:#ff8fb1;box-shadow:0 7px 0 #d94f80" aria-label="Adopt a pet">${ICON.adoptW}</button><span>Adopt</span></div>
+      <div class="lbl-btn" id="tHouse"><button class="icon-btn" style="background:#5cc06b;box-shadow:0 7px 0 #3a8a48" aria-label="Pet House">${ICON.phouse}</button><span>Pet House</span></div>
       <div class="lbl-btn" id="tShop"><button class="icon-btn yellow" aria-label="Shop">${ICON.bag}</button><span>Shop</span></div>
       <button class="icon-btn gear" id="tGear" aria-label="Settings">${ICON.gear.replace(/#fff/g, '#c9b8ff').replace(/#9a7bb0/g, '#fff')}</button>`;
     $('#tPlay', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); newDay(); go('wait', 'start'); });
     $('#tRoom', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('room'); });
+    $('#tHouse', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('house'); });
     $('#tAdopt', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('adopt'); });
     $('#tShop', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('shop'); });
     $$('.tpet', el).forEach(p => p.addEventListener('pointerdown', () => { Snd.init(); Music.start(); SP[p.dataset.sp].sound(); hop(p); }));
@@ -1174,6 +1256,7 @@ screens.title = {
     const r = $('#tRoom', el); r.style.left = '20px'; r.style.top = '20px';
     const sb = $('#tShop', el); sb.style.left = '20px'; sb.style.top = '178px';
     const ab = $('#tAdopt', el); ab.style.left = '20px'; ab.style.top = '336px';
+    const hb = $('#tHouse', el); hb.style.left = '20px'; hb.style.top = '494px';
     const ps = $$('.tpet', el), sz = port ? 250 : Math.min(190, W * 0.2);
     if (port) { place(ps[0], 40, H * 0.95 - sz, sz, sz); place(ps[1], W / 2 - sz * 0.4, H * 0.97 - sz * 0.8, sz * 0.8, sz * 0.8); place(ps[2], W - sz - 40, H * 0.95 - sz, sz, sz); place($('.sun', el), W - 230, 140, 130, 130); return; }
     place(ps[0], Math.max(4, bx - sz * 0.45), H * 0.97 - sz, sz, sz);
@@ -1726,6 +1809,295 @@ function openAdopt(sp) {
     setTimeout(() => ban.classList.add('out'), 2600); setTimeout(() => ban.remove(), 3100);
   }
 }
+
+/* =====================================================================
+   PET HOUSE — Ben's game: buy pets with coins, give them what they want
+   to train their feelings, take the dog out to pee.
+   ===================================================================== */
+const HKINDS = { dog: { art: 'puppy', cost: 60 }, cat: { art: 'kitten', cost: 60 }, snake: { art: 'snake', cost: 60, move: 'slither' }, frog: { art: 'frog', cost: 60, move: 'hop' },
+  bird: { art: 'parrot', cost: 60, move: 'fly' }, fox: { art: 'fox', cost: 60 }, unicorn: { art: 'unicorn', cost: 150 }, dragon: { art: 'dragon', cost: 150 } };
+const ALLK = Object.keys(HKINDS);
+const bowl = (c, top) => V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', c, OUT(c), '', 4) + top + E(50, 52, 38, 9, shade(c, 0.5), OUT(c), '', 3));
+const HITEMS = {
+  water: { cost: 0, for: ALLK, icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#7cc6fe', '#3b7fb8', '', 4) + E(50, 52, 38, 9, '#bfe9ff', '#3b7fb8', '', 3) + E(38, 50, 9, 2.5, '#fff')) },
+  ball: { cost: 0, for: ['dog', 'cat', 'fox', 'dragon'], icon: TOOLS.toy },
+  dogfood: { cost: 15, for: ['dog'], icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#ff6b6b', '#c43a3a', '', 4) + E(50, 52, 38, 9, '#ffd0d0', '#c43a3a', '', 3) + [[36, 48], [48, 44], [60, 48], [54, 52], [42, 52]].map(([x, y]) => C(x, y, 6, '#a8733c')).join('')) },
+  bone: { cost: 20, for: ['dog', 'fox'], icon: TREATS.bone },
+  leash: { cost: 25, for: ['dog'], icon: V(L('M24 80 Q18 22 60 22 Q88 24 82 52', '#ff5a5a', 7) + E(24, 84, 11, 8, 'none', '#c43a3a', '', 6) + C(82, 56, 7, '#ffd84a', '#c99a10', '', 3)) },
+  catfood: { cost: 15, for: ['cat'], icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#b79cff', '#8a6fd6', '', 4) + E(50, 52, 38, 9, '#e6dcff', '#8a6fd6', '', 3) + P('M62 40 L74 32 L74 48Z', '#ff9f5a') + E(48, 40, 16, 8, '#ff9f5a')) },
+  yarn: { cost: 20, for: ['cat'], icon: V(C(46, 54, 30, '#ff8fb1', '#d94f80', '', 4) + L('M24 44 Q46 60 68 40 M22 60 Q46 76 72 58 M36 28 Q42 54 34 82', '#d94f80', 3) + L('M70 72 Q90 80 84 94', '#d94f80', 3)) },
+  litter: { cost: 25, for: ['cat'], icon: V(`<rect x="12" y="46" width="76" height="40" rx="8" fill="#8ee3c8" stroke="#4fae8a" stroke-width="4"/>` + E(50, 48, 34, 7, '#f6dfa4') + L('M74 18 L58 44', '#b79cff', 6) + E(54, 48, 11, 6, '#b79cff')) },
+  mouse: { cost: 20, for: ['cat', 'snake'], icon: V(L('M72 62 Q92 60 90 82', '#ff8fb1', 4) + E(46, 60, 28, 18, '#c9c9d6', '#8a8aa0', '', 4) + C(32, 44, 9, '#ffc2d4', '#8a8aa0', '', 3) + C(22, 60, 3, '#333') + C(17, 64, 3, '#ff8fb1')) },
+  heatlamp: { cost: 30, for: ['snake', 'frog', 'dragon'], icon: V(L('M30 92 H70', '#888', 6) + L('M50 92 V44', '#888', 5) + P('M24 44 L76 44 L66 18 H34Z', '#ff6b6b', '#c43a3a', '', 4) + E(50, 50, 18, 7, '#ffd166') + L('M30 62 l-8 8 M70 62 l8 8 M50 60 v10', '#ffb84d', 3)) },
+  bugs: { cost: 15, for: ['frog', 'bird'], icon: V(`<rect x="26" y="30" width="48" height="58" rx="10" fill="#e8f7ff" stroke="#7cc6fe" stroke-width="4"/><rect x="23" y="20" width="54" height="13" rx="4" fill="#9b7be8"/>` + [[40, 50], [58, 60], [44, 72]].map(([x, y]) => E(x, y, 4, 3, '#333') + E(x - 3, y - 4, 4, 2.5, '#bfe9ff') + E(x + 3, y - 4, 4, 2.5, '#bfe9ff')).join('')) },
+  lilypad: { cost: 25, for: ['frog'], icon: V(E(50, 66, 42, 24, '#5cc06b', '#3a8a48', '', 4) + P('M50 66 L92 58 L90 74Z', '#fff') + [0, 72, 144, 216, 288].map(a => E(R1(46 + Math.cos(a / 57.3) * 8), R1(46 + Math.sin(a / 57.3) * 8), 7, 5, '#ff8fb1')).join('') + C(46, 46, 5, '#ffd84a')) },
+  seeds: { cost: 15, for: ['bird'], icon: V(P('M26 32 Q50 22 74 32 L80 86 Q50 94 20 86Z', '#e9d3a8', '#b98a4f', '', 4) + L('M30 34 Q50 42 70 34', '#b98a4f', 4) + [[40, 60], [52, 68], [62, 58], [46, 76]].map(([x, y]) => E(x, y, 3, 5, '#5a4a3a')).join('')) },
+  bell: { cost: 20, for: ['bird'], icon: V(P('M50 18 Q26 22 26 56 L20 72 H80 L74 56 Q74 22 50 18Z', '#ffd84a', '#c99a10', '', 4) + C(50, 78, 7, '#c99a10') + C(50, 13, 5, 'none', '#c99a10', '', 3)) },
+  cage: { cost: 40, for: ['bird'], home: true, icon: V(`<rect x="14" y="80" width="72" height="12" rx="4" fill="#b79cff" stroke="#8a6fd6" stroke-width="3"/>` + L('M20 80 V44 Q20 14 50 14 Q80 14 80 44 V80 M35 80 V22 M50 80 V14 M65 80 V22 M20 50 H80', '#9a7bb0', 4) + C(50, 9, 5, 'none', '#9a7bb0', '', 3)) },
+  berries: { cost: 15, for: ['fox', 'bird', 'unicorn'], icon: TREATS.berry },
+  hay: { cost: 20, for: ['unicorn'], icon: V(`<rect x="14" y="36" width="72" height="48" rx="8" fill="#ffd166" stroke="#d9a520" stroke-width="4"/>` + ['#ff8fb1', '#7cc6fe', '#8ee3c8', '#b79cff'].map((c, i) => L(`M18 ${46 + i * 10} H82`, c, 4)).join('')) },
+  gold: { cost: 30, for: ['dragon'], icon: V([[30, 74], [54, 76], [76, 72], [42, 58], [64, 56], [52, 40]].map(([x, y]) => C(x, y, 14, '#ffd84a', '#c99a10', '', 3)).join('')) },
+  bed: { cost: 30, for: ['dog', 'cat', 'fox', 'unicorn'], icon: V(E(50, 64, 44, 22, '#ff8fb1', '#d94f80', '', 4) + E(50, 58, 32, 12, '#ffd0e0')) }
+};
+const FEELS = ['shy', 'angry', 'scared', 'sad', 'curious'];
+const FEEL_WORD = { shy: 'Shy', angry: 'Angry', scared: 'Scared', sad: 'Sad', curious: 'Curious' };
+const likesOf = kind => Object.keys(HITEMS).filter(k => HITEMS[k].for.includes(kind) && !HITEMS[k].home);
+const SOFA = `<svg viewBox="0 0 260 150"><rect x="14" y="10" width="232" height="80" rx="30" fill="#b79cff" stroke="#8a6fd6" stroke-width="5"/><rect x="0" y="60" width="54" height="70" rx="22" fill="#a68af5" stroke="#8a6fd6" stroke-width="5"/><rect x="206" y="60" width="54" height="70" rx="22" fill="#a68af5" stroke="#8a6fd6" stroke-width="5"/><rect x="44" y="70" width="172" height="52" rx="16" fill="#c9b8ff" stroke="#8a6fd6" stroke-width="5"/>${L('M130 74 V120', '#8a6fd6', 4)}${L('M28 130 v16 M232 130 v16', '#7a5a3a', 8)}</svg>`;
+const TREE = `<svg viewBox="0 0 200 300"><rect x="84" y="150" width="32" height="150" rx="8" fill="#a8733c" stroke="#7a4a2e" stroke-width="5"/>${blob([[100, 90, 60], [56, 120, 42], [144, 120, 42], [100, 140, 40]], '#5cc06b')}</svg>`;
+function feelOver(feel, S) {
+  const f = S.face, top = anchors(S).top;
+  if (feel === 'shy') return E(150 - f.ex - 4, f.ey + 26, 22, 13, '#ff7fa6', null, 'opacity=".7"') + E(150 + f.ex + 4, f.ey + 26, 22, 13, '#ff7fa6', null, 'opacity=".7"');
+  if (feel === 'angry') return E(150, f.ey + 10, 64, 40, '#ff3b3b', null, 'opacity=".18"') + `<g>${blob([[118, top[1] - 16, 12], [104, top[1] - 30, 9]], '#e8e8ee')}${blob([[182, top[1] - 16, 12], [196, top[1] - 30, 9]], '#e8e8ee')}<animate attributeName="opacity" values="1;.3;1" dur="0.8s" repeatCount="indefinite"/></g>`;
+  if (feel === 'scared') return overlay('scared', 0, S);
+  if (feel === 'sad') return overlay('lonely', 0, S);
+  if (feel === 'curious') return `<g><text x="${150 + f.ex + 30}" y="${f.ey - 30}" font-size="44" font-weight="bold" fill="#7a5cff" font-family="Arial,sans-serif">?</text><text x="${150 - f.ex - 56}" y="${f.ey - 40}" font-size="32" font-weight="bold" fill="#b79cff" font-family="Arial,sans-serif">?</text><animate attributeName="opacity" values="1;.3;1" dur="1.2s" repeatCount="indefinite"/></g>`;
+  return '';
+}
+function newHouse() { save.house = { coins: 60, pets: [], items: {}, n: 0 }; store(); }
+function coinPop(el, n) { const [x, y] = elCenter(el); for (let i = 0; i < 12; i++) FX.add({ x, y, vx: rand(-5, 5) * SC, vy: rand(-9, -4) * SC, g: 0.35 * SC, life: 0, max: 50, size: rand(16, 24) * SC, color: '#ffd84a', shape: 'circle', rot: 0, vr: 0, drag: 0.98 }); SFX.coin(); }
+function toast(txt) { const t = h(`<div class="toast">${txt}</div>`); stage.appendChild(t); setTimeout(() => t.remove(), 1400); }
+function namePicker(art, onDone, onCancel) {
+  const taken = save.house ? save.house.pets.map(p => p.name) : [];
+  const fresh = () => shuffle(PET_NAMES.filter(n => !taken.includes(n))).slice(0, 3);
+  let names = fresh(), name = names[0];
+  const ov = h(`<div class="overlay"><div class="care apanel"><button class="icon-btn x" aria-label="Close">${ICON.x}</button><div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(art, 'happy')}</div></div></div></div><div class="astep"></div></div></div>`);
+  stage.appendChild(ov); speak(art, $('.cpet', ov));
+  $('.x', ov).addEventListener('click', () => { ov.remove(); if (onCancel) onCancel(); });
+  const draw = () => {
+    const st = $('.astep', ov);
+    st.innerHTML = names.map(n => `<button class="nbtn ${n === name ? 'on' : ''}">${n}</button>`).join('') + `<button class="shuf" aria-label="Other names">${ICON.replay}</button><button class="okbtn" aria-label="OK">${ICON.check}</button>`;
+    $$('.nbtn', st).forEach(b => b.addEventListener('click', () => { name = b.textContent; $$('.nbtn', st).forEach(x => x.classList.toggle('on', x === b)); SFX.pop(); }));
+    $('.shuf', st).addEventListener('click', () => { names = fresh(); name = names[0]; SFX.boing(); draw(); });
+    $('.okbtn', st).addEventListener('click', () => { ov.remove(); onDone(name); });
+  };
+  draw();
+}
+
+screens.house = {
+  enter(el, mode) {
+    this.el = el; clearInterval(this.tick);
+    el.innerHTML = `<div class="hbg"><div class="wall"></div><div class="floor"></div></div><div class="hdeco abs" id="hWin">${WINDOW}</div><div class="hdeco abs" id="hSofa">${SOFA}</div>
+      <div class="hitems"></div><div class="puddles"></div><div class="hpets"></div>
+      <div class="topbar"><button class="icon-btn" id="hHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button>
+        <button class="pshop" id="hShop">${ICON.bag}<span>Pet Shop</span></button>
+        <div class="tr"><button class="peebtn hidden" id="hPee">${ICON.potty}<span>Take out to pee</span></button><div class="pill coins">${ICON.coin}<b>0</b></div></div></div>
+      <div class="hempty hidden">${ICON.arrow.replace('<svg', '<svg style="width:46px;height:46px;transform:rotate(180deg)"')}<span>Get a pet!</span></div>`;
+    $('#hHome', el).addEventListener('click', () => { SFX.pop(); go('title'); });
+    $('#hShop', el).addEventListener('click', () => { SFX.pop(); go('petshop'); });
+    $('#hPee', el).addEventListener('click', () => this.peeWalk());
+    if (mode === 'in' && save.house) this.start(); else this.menu();
+  },
+  leave() { clearInterval(this.tick); },
+  menu() {
+    const has = !!save.house;
+    const ov = h(`<div class="overlay"><div class="panel pop-in"><div class="hpic">${V(P('M50 8 L94 44 H82 V92 H18 V44 H6Z', '#ffd166', '#e0a020', '', 4) + `<rect x="40" y="60" width="20" height="32" rx="4" fill="#ff8fb1"/>` + C(30, 58, 7, '#bfe7ff') + C(70, 58, 7, '#bfe7ff'))}</div><div class="ptitle">Pet House</div>
+      <div class="hstart"><button class="rs">Restart game</button><button class="ct" ${has ? '' : 'disabled'}>Continue game</button></div></div></div>`);
+    stage.appendChild(ov);
+    $('.ct', ov).addEventListener('click', () => { if (!save.house) return; SFX.pop(); ov.remove(); this.start(); });
+    $('.rs', ov).addEventListener('click', () => {
+      SFX.pop();
+      if (!save.house) { ov.remove(); newHouse(); this.start(); return; }
+      $('.hstart', ov).innerHTML = `<button class="rs">Yes, start over</button><button class="ct">No</button>`;
+      $('.ptitle', ov).textContent = 'Start over?';
+      $('.hstart .rs', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); newHouse(); this.start(); });
+      $('.hstart .ct', ov).addEventListener('click', () => { ov.remove(); this.menu(); });
+    });
+  },
+  start() { this.layout(); clearInterval(this.tick); this.tick = setInterval(() => this.second(), 1000); },
+  layout() {
+    const el = this.el, house = save.house; if (!house) return;
+    const port = isPortrait(), FL = Math.round(H * (port ? 0.52 : 0.58)), k = decoK();
+    this.FL = FL;
+    $('.hbg .wall', el).style.height = FL + 'px'; $('.hbg .floor', el).style.height = (H - FL) + 'px';
+    place($('#hWin', el), W / 2 - 110 * k, FL * 0.2, 220 * k, 170 * k);
+    place($('#hSofa', el), W * 0.03, FL - 100 * k, 260 * k, 150 * k);
+    $('.pill.coins b', el).textContent = house.coins;
+    $('.hempty', el).classList.toggle('hidden', house.pets.length > 0);
+    $('#hPee', el).classList.toggle('hidden', !house.pets.some(p => p.kind === 'dog'));
+    Object.assign($('#hPee', el).style, W < 1000 ? { position: 'absolute', right: '-90px', top: '84px' } : { position: '', right: '', top: '' });
+    // things she bought
+    const owned = Object.keys(HITEMS).filter(id => house.items[id] && !HITEMS[id].home), is = Math.min(90, (W * 0.6) / Math.max(1, owned.length));
+    let ih = owned.map((id, i) => `<div class="hitem abs" data-id="${id}" style="left:${R1(W * 0.3 + i * is)}px;top:${R1(FL - is * 0.55)}px;width:${R1(is * 0.9)}px;height:${R1(is * 0.9)}px">${HITEMS[id].icon}</div>`).join('');
+    this.cage = null;
+    if (house.items.cage) { const cw = 170 * k; this.cage = { x: W - cw - 30, y: FL - cw * 1.25, w: cw }; ih += `<div class="hcage abs" style="left:${R1(this.cage.x)}px;top:${R1(this.cage.y)}px;width:${R1(cw)}px;height:${R1(cw)}px;z-index:2">${HITEMS.cage.icon}</div>`; }
+    $('.hitems', el).innerHTML = ih;
+    $$('.hitem', el).forEach(it => it.addEventListener('click', () => { it.classList.remove('tap'); void it.offsetWidth; it.classList.add('tap'); SFX.pop(); }));
+    this.spawnPets();
+  },
+  spawnPets() {
+    const el = this.el, house = save.house, layer = $('.hpets', el), FL = this.FL, g = gen, port = isPortrait();
+    const size = port ? 170 : 150; layer.innerHTML = '';
+    this.ents = house.pets.map((p, i) => {
+      const K = HKINDS[p.kind], move = K.move || 'walk';
+      const caged = p.kind === 'bird' && this.cage;
+      const sz = caged ? this.cage.w * 0.62 : size;
+      const ly0 = FL + (H - FL) * 0.38, ly1 = H - size * 0.2, lane = ly0 + (ly1 - ly0) * (house.pets.length > 1 ? i / (house.pets.length - 1) : 0.5);
+      const e = { p, K, move, caged, size: sz, x: rand(W * 0.15, W * 0.85), y: move === 'fly' ? rand(150, FL - 60) : lane, tx: 0, ty: 0, wait: rand(0.5, 2), speed: move === 'fly' ? 140 : move === 'slither' ? 45 : 70,
+        wantIn: rand(4, 10), peeIn: rand(40, 70), accIn: 40, tempSad: 0 };
+      if (caged) { e.x = this.cage.x + this.cage.w / 2; e.y = this.cage.y + this.cage.w * 0.82; }
+      e.el = h(`<div class="pt hpet" style="z-index:${Math.round(e.y)}"><div class="flip"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(K.art, 'happy')}</div></div></div></div><div class="pname">${p.name}</div><div class="wantb"></div></div>`);
+      e.flip = $('.flip', e.el); e.md = $('.md', e.el);
+      layer.appendChild(e.el);
+      e.el.addEventListener('click', () => this.openCare(e));
+      this.refresh(e); this.pos(e);
+      return e;
+    });
+    let last = performance.now();
+    const step = t => {
+      if (g !== gen || !layer.isConnected || (this.ents[0] && !this.ents[0].el.isConnected)) return;
+      const dt = Math.min(0.05, (t - last) / 1000); last = t;
+      for (const e of this.ents) {
+        if (e.caged || e.p.needPee) continue;
+        if (e.wait > 0) {
+          e.wait -= dt;
+          if (e.wait <= 0) {
+            e.tx = rand(W * 0.08, W * 0.92); e.ty = e.move === 'fly' ? rand(150, this.FL - 40) : e.y;
+            e.md.className = 'md ' + ({ hop: 'hop2', slither: 'slither', fly: 'flyb' }[e.move] || 'walk'); e.flip.classList.toggle('left', e.tx < e.x);
+          }
+          continue;
+        }
+        const dx = e.tx - e.x, dy = e.ty - e.y, d = Math.hypot(dx, dy), sp = e.speed * dt;
+        if (d <= sp) { e.x = e.tx; e.y = e.ty; e.wait = e.move === 'fly' ? rand(0.5, 2) : rand(1.5, 4.5); this.refresh(e); }
+        else { e.x += dx / d * sp; e.y += dy / d * sp; }
+        this.pos(e);
+      }
+      requestAnimationFrame(step);
+    };
+    if (this.ents.length) requestAnimationFrame(step);
+  },
+  pos(e) { place(e.el, e.x - e.size / 2, e.y - e.size * 0.95, e.size, e.size); e.el.style.zIndex = e.caged ? 3 : Math.round(e.y); },
+  refresh(e) {
+    const p = e.p, S = SP[e.K.art], sv = $('svg', e.el), w = p.want;
+    const mood = e.tempSad > 0 || (w && w.feel !== 'shy' && w.feel !== 'curious') ? 'sad' : w ? 'okay' : 'happy';
+    $('.a-face', sv).innerHTML = face(S.face, mood);
+    $('.a-over', sv).innerHTML = w ? feelOver(w.feel, S) : '';
+    if (e.wait > 0 || e.caged || p.needPee) e.md.className = 'md ' + (p.needPee ? 'shiver' : w ? ({ shy: 'droopy', angry: 'shiver', scared: 'shiver', sad: 'sad', curious: 'idle' }[w.feel]) : 'idle');
+    $('.wantb', e.el).innerHTML = p.needPee ? `<div class="wi">${ICON.potty}</div><small>Pee!</small>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><small>${FEEL_WORD[w.feel]}</small>` : '';
+    $('#hPee', this.el).classList.toggle('need', save.house.pets.some(q => q.needPee));
+  },
+  makeWant(e) {
+    const likes = likesOf(e.p.kind), have = likes.filter(id => save.house.items[id]);
+    const item = have.length && Math.random() < 0.7 ? pick(have) : pick(likes);
+    e.p.want = { feel: pick(FEELS), item }; store(); this.refresh(e); speak(e.K.art, e.el);
+  },
+  second() {
+    if (!save.house) return;
+    for (const e of this.ents || []) {
+      if (e.tempSad > 0 && --e.tempSad === 0) this.refresh(e);
+      if (!e.p.want && !e.p.needPee && (e.wantIn -= 1) <= 0) this.makeWant(e);
+      if (e.p.kind !== 'dog') continue;
+      if (!e.p.needPee && (e.peeIn -= 1) <= 0) { e.p.needPee = true; e.accIn = 40; store(); this.refresh(e); SFX.bark(1.75, 3); }
+      else if (e.p.needPee && (e.accIn -= 1) <= 0) this.accident(e);
+    }
+  },
+  accident(e) {
+    e.p.needPee = false; e.peeIn = rand(50, 80); e.tempSad = 4; store();
+    const pw = e.size * 0.7, pd = h(`<div class="puddle" style="left:${R1(e.x - pw / 2)}px;top:${R1(e.y - 22)}px;width:${R1(pw)}px"></div>`);
+    $('.puddles', this.el).appendChild(pd); SFX.tinkle(); this.refresh(e);
+    pd.addEventListener('click', () => { SFX.whoosh(); FX.bubbles(...elCenter(pd), 10); pd.remove(); });
+  },
+  peeWalk() {
+    const e = (this.ents || []).find(x => x.p.needPee);
+    const b = $('#hPee', this.el);
+    if (!e) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); SFX.boop(); return; }
+    SFX.pop(); const g = gen;
+    const ds = 200, yd = h(`<div class="yard"><div class="ysky"></div><div class="ygrass"></div><div class="abs" style="left:${R1(W * 0.62)}px;top:${R1(H * 0.6 - 300)}px;width:200px;height:300px">${TREE}</div>
+      <div class="ypud" style="left:${R1(W * 0.62 - 40)}px;top:${R1(H * 0.6 + 70)}px;width:150px"></div>
+      <div class="pt ydog" style="left:-220px;top:${R1(H * 0.6 + 100 - ds)}px;width:${ds}px;height:${ds}px"><div class="mv"><div class="md walk"><div class="rx">${animalSVG(e.K.art, 'happy')}</div></div></div></div></div>`);
+    stage.appendChild(yd);
+    run(async () => {
+      await wait(60, g); $('.ydog', yd).style.left = R1(W * 0.62 - 150) + 'px';
+      await wait(1500, g); $('.ydog .md', yd).className = 'md idle';
+      $('.ypud', yd).style.transform = 'scale(1)'; SFX.tinkle();
+      await wait(1500, g);
+      const ban = h(`<div class="banner">Good job!</div>`); ban.style.top = (H * 0.15) + 'px'; yd.appendChild(ban);
+      $('.ydog .md', yd).className = 'md dance'; speak(e.K.art, $('.ydog', yd));
+      e.p.needPee = false; e.peeIn = rand(50, 80); save.house.coins += 10; store();
+      coinPop($('.ydog', yd)); FX.confetti(50);
+      await wait(1800, g); yd.remove();
+      $('.pill.coins b', this.el).textContent = save.house.coins; this.refresh(e);
+    });
+  },
+  openCare(e) {
+    const p = e.p, art = e.K.art; speak(art, e.el); hop(e.el);
+    const ov = h(`<div class="overlay"><div class="care hcare"><button class="icon-btn x" aria-label="Close">${ICON.x}</button><div class="cname">${p.name}</div><div class="lvls"></div>
+      <div class="hrow"><div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(art, 'happy')}</div></div></div></div><div class="wantbig"></div></div><div class="itray"></div></div></div>`);
+    stage.appendChild(ov);
+    $('.x', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
+    ov.addEventListener('pointerdown', ev => { if (ev.target === ov) ov.remove(); });
+    const pet = $('.cpet', ov);
+    const draw = () => {
+      const w = p.want, S = SP[art], sv = $('svg', pet);
+      $('.lvls', ov).innerHTML = FEELS.map(f => `<div class="lv ${w && w.feel === f ? 'hot' : ''}" data-f="${f}"><span>${FEEL_WORD[f]}</span><b>${p.feel[f]}</b></div>`).join('');
+      $('.a-face', sv).innerHTML = face(S.face, w && w.feel !== 'shy' && w.feel !== 'curious' ? 'sad' : w ? 'okay' : 'happy');
+      $('.a-over', sv).innerHTML = w ? feelOver(w.feel, S) : '';
+      $('.wantbig', ov).innerHTML = p.needPee ? `<div class="wi">${ICON.potty}</div><span>Pee!</span>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><span>${FEEL_WORD[w.feel]}</span>` : `<div class="wi">${V(P(heartPath(50, 54, 40), '#ff6b8a', '#d6456a', '', 4))}</div><span>Happy!</span>`;
+      const owned = Object.keys(HITEMS).filter(id => save.house.items[id] && !HITEMS[id].home);
+      $('.itray', ov).innerHTML = owned.length ? owned.map(id => `<button data-id="${id}" aria-label="${id}">${HITEMS[id].icon}</button>`).join('') : `<button data-shop="1" aria-label="Pet Shop">${ICON.bag}</button>`;
+      $$('.itray button', ov).forEach(b => b.addEventListener('click', () => { if (b.dataset.shop) { ov.remove(); go('petshop'); return; } give(b); }));
+    };
+    const give = b => {
+      const id = b.dataset.id, w = p.want;
+      if (w && w.item === id) {
+        p.feel[w.feel] = (p.feel[w.feel] || 0) + 1; save.house.coins += 10; const f = w.feel; p.want = null; e.wantIn = rand(10, 22); store();
+        coinPop(pet); FX.sparkle(...elCenter(pet), 20); SFX.cheer(); $('.md', pet).className = 'md dance'; speak(art, pet);
+        draw(); const lv = $(`.lv[data-f="${f}"]`, ov); if (lv) lv.classList.add('bump');
+        toast(`${FEEL_WORD[f]} level ${p.feel[f]}! +10`); $('.pill.coins b', this.el).textContent = save.house.coins; this.refresh(e);
+      } else if (HITEMS[id].for.includes(p.kind)) { hop(pet); FX.hearts(...elCenter(pet), 5); SFX.aww(); }
+      else { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); const rx = $('.rx', pet); rx.classList.remove('sneeze'); void rx.offsetWidth; rx.classList.add('sneeze'); SFX.boop(); }
+    };
+    draw();
+  }
+};
+
+screens.petshop = {
+  enter(el, tab) {
+    this.el = el; this.tab = tab || 'pets'; if (!save.house) newHouse();
+    el.innerHTML = `<div class="shop-bg"></div><div class="awning" style="background:repeating-linear-gradient(90deg,#8ee3c8 0 70px,#fff 70px 140px)"></div><div class="shop-sign" style="border-color:#8ee3c8;color:#3aa889">Pet Shop</div>
+      <div class="topbar"><button class="icon-btn" id="psBack" style="left:16px;top:16px;background:#5cc06b;box-shadow:0 7px 0 #3a8a48" aria-label="Pet House">${ICON.phouse}</button><div class="tr"><div class="pill coins">${ICON.coin}<b>${save.house.coins}</b></div></div></div>
+      <div class="tabs"><button class="tab" data-tab="pets" aria-label="Pets">${ICON.paw}</button><button class="tab" data-tab="stuff" aria-label="Pet things">${ICON.bag}</button></div><div class="sgrid"></div>`;
+    $('#psBack', el).addEventListener('click', () => { SFX.pop(); go('house', 'in'); });
+    $$('.tab', el).forEach(t => t.addEventListener('click', () => { SFX.pop(); this.tab = t.dataset.tab; this.render(); }));
+    this.render();
+  },
+  render() {
+    const el = this.el, house = save.house, g = $('.sgrid', el);
+    $$('.tab', el).forEach(t => t.classList.toggle('on', t.dataset.tab === this.tab));
+    $('.pill.coins b', el).textContent = house.coins;
+    const full = house.pets.length >= 5;
+    if (this.tab === 'pets') g.innerHTML = ALLK.map(k => `<div class="card ${full || house.coins < HKINDS[k].cost ? 'poor' : ''}" data-k="${k}"><div class="pic">${animalSVG(HKINDS[k].art, 'happy')}</div><div class="price">${ICON.coin}<b>${HKINDS[k].cost}</b></div></div>`).join('');
+    else g.innerHTML = Object.keys(HITEMS).map(id => { const it = HITEMS[id], own = house.items[id];
+      return `<div class="card ${own ? 'owned' : house.coins < it.cost ? 'poor' : ''}" data-i="${id}"><div class="mini">${it.for.length < ALLK.length ? it.for.slice(0, 3).map(k => `<span>${animalSVG(HKINDS[k].art, 'happy')}</span>`).join('') : ''}</div><div class="pic">${it.icon}</div>${own ? `<div class="got">${ICON.check}</div>` : it.cost ? `<div class="price">${ICON.coin}<b>${it.cost}</b></div>` : `<div class="free">FREE</div>`}</div>`; }).join('');
+    $$('.card', g).forEach(c => c.addEventListener('click', () => this.tap(c)));
+  },
+  tap(c) {
+    const house = save.house, bounce = cls => { c.classList.remove('shake', 'hopit'); void c.offsetWidth; c.classList.add(cls); };
+    if (c.dataset.k) {
+      const k = c.dataset.k, K = HKINDS[k];
+      if (house.pets.length >= 5) { bounce('shake'); SFX.boop(); toast('5 pets is the most!'); return; }
+      if (house.coins < K.cost) { bounce('shake'); SFX.boop(); return; }
+      SFX.pop();
+      namePicker(K.art, name => {
+        if (save.house.coins < K.cost || save.house.pets.length >= 5) return;
+        save.house.coins -= K.cost; save.house.n++;
+        save.house.pets.push({ id: save.house.n, kind: k, name, feel: { shy: 0, angry: 0, scared: 0, sad: 0, curious: 0 }, want: null, needPee: false });
+        store(); SFX.coin(); FX.confetti(100); setTimeout(() => SFX.fanfare(), 200); go('house', 'in');
+      });
+      return;
+    }
+    const id = c.dataset.i, it = HITEMS[id];
+    if (house.items[id]) { bounce('hopit'); SFX.chime(); return; }
+    if (house.coins < it.cost) { bounce('shake'); SFX.boop(); return; }
+    const buy = () => { house.coins -= it.cost; house.items[id] = true; store(); SFX.coin(); FX.sparkle(...elCenter(c), 20); this.render(); const nc = $(`.card[data-i="${id}"]`, this.el); if (nc) nc.classList.add('hopit'); };
+    if (!it.cost) { buy(); return; }
+    SFX.pop();
+    const ov = h(`<div class="overlay"><div class="buy"><div class="big">${it.icon}</div><div class="row"><button class="icon-btn no" aria-label="No">${ICON.x}</button><button class="yes" aria-label="Buy">${ICON.coin}<b>${it.cost}</b></button></div></div></div>`);
+    stage.appendChild(ov);
+    $('.no', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
+    ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
+    $('.yes', ov).addEventListener('click', () => { ov.remove(); if (save.house.coins >= it.cost && !save.house.items[id]) buy(); });
+  }
+};
 
 /* =====================================================================
    SHOP — spend stars on pets and clinic decorations.
