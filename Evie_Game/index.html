@@ -180,11 +180,11 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .sign-t{position:absolute;left:30px;top:12px;width:500px;height:136px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
 .sign-t .t1{font-size:60px;color:#ff5d8f}
 .sign-t .t2{font-size:46px;color:#8a63e0;margin-top:6px}
-.gear{position:absolute;left:12px;bottom:12px;width:56px;height:56px;opacity:.28;z-index:30;padding:8px}
-.gear svg{position:absolute;inset:0;width:100%;height:100%}
-.gear .ring{fill:none;stroke:#ff3b6b;stroke-width:8;stroke-dasharray:277;stroke-dashoffset:277;transform:rotate(-90deg);transform-origin:50% 50%}
-.gear.holding{opacity:.9}
-.gear.holding .ring{stroke-dashoffset:0;transition:stroke-dashoffset 3s linear}
+.gear{left:16px;bottom:16px;top:auto;width:70px;height:70px;padding:12px;background:#c9b8ff;box-shadow:0 6px 0 #9a83e0,0 10px 16px rgba(0,0,0,.12)}
+.modal .srow2{display:flex;gap:16px;justify-content:center;margin-bottom:22px}
+.modal .srow2 button{display:flex;align-items:center;gap:10px;margin:0}
+.modal .srow2 svg{width:36px;height:36px}
+.modal .snd{background:#7cc6fe;color:#fff}
 .lbl-btn{position:absolute;display:flex;flex-direction:column;align-items:center;gap:6px;z-index:30}
 .lbl-btn .icon-btn{position:relative;width:100px;height:100px;padding:20px}
 .lbl-btn span{font-size:30px;color:#fff;text-shadow:0 3px 0 #8a6fd6,2px 0 0 #8a6fd6,-2px 0 0 #8a6fd6,0 -2px 0 #8a6fd6}
@@ -343,7 +343,7 @@ async function wait(ms, g) { await sleep(ms); if (g !== gen) throw ABORT; }
 function run(fn) { fn().catch(e => { if (e !== ABORT) console.error(e); }); }
 
 // ---------- saving ----------
-const SAVE_KEY = 'drEvieClinic.v1';
+const SAVE_KEY = 'drEvieClinic.v3';
 // stars = stars to spend in the shop; owned = bought decorations; pets = bought pets
 const freshSave = muted => ({ v: 2, stars: 0, stickers: {}, muted: !!muted, days: 0, owned: {}, pets: [], photos: [], petLove: {} });
 let save = freshSave(false);
@@ -480,6 +480,7 @@ const SFX = {
     setTimeout(() => SFX.giggle(), 650);
   },
   siren() { for (let i = 0; i < 3; i++) { tone({ type: 'square', f: 960, dur: 0.3, vol: 0.05, a: 0.02, hold: 0.22, at: i * 0.6, filt: ['lowpass', 2500, 1] }); tone({ type: 'square', f: 770, dur: 0.3, vol: 0.05, a: 0.02, hold: 0.22, at: i * 0.6 + 0.3, filt: ['lowpass', 2500, 1] }); } },
+  yay() { tone({ type: 'triangle', f: 620, pts: [[0.2, 900]], dur: 0.26, vol: 0.17, vib: [7, 10] }); tone({ type: 'sawtooth', f: 620, pts: [[0.2, 900]], dur: 0.26, vol: 0.04, filt: ['bandpass', 2400, 3] }); tone({ type: 'triangle', f: 900, pts: [[0.3, 760]], dur: 0.34, vol: 0.16, vib: [7, 12], at: 0.26 }); },
   clap() { for (const at of [0, 0.15]) nz({ dur: 0.06, vol: 0.32, filt: ['bandpass', 1800, 1], at }); },
   shutter() { nz({ dur: 0.04, vol: 0.35, filt: ['highpass', 2500, 1] }); nz({ dur: 0.05, vol: 0.3, filt: ['bandpass', 1500, 1], at: 0.08 }); },
   rawr() { tone({ type: 'sawtooth', f: 300, pts: [[0.15, 430], [0.45, 250]], dur: 0.5, vol: 0.2, vib: [30, 40], filt: ['bandpass', 900, 2] }); setTimeout(() => SFX.sneeze(), 550); setTimeout(() => SFX.sparkle(), 950); },
@@ -585,6 +586,7 @@ function face(f, mood) {
     else s += P(`M${cx - 21} ${my - 2} Q${cx} ${my + 36} ${cx + 21} ${my - 2} Q${cx} ${my + 5} ${cx - 21} ${my - 2}Z`, '#8a2d3b', mL, '', 3.5) + E(cx, my + 14, 9, 7, '#ff7b95');
     if (f.teeth && mood !== 'happy') s += P(`M${cx - 7} ${my + 1} h14 v9 q0 3 -3 3 h-8 q-3 0 -3 -3Z`, '#fff', mL, '', 2.5) + L(`M${cx} ${my + 1} v12`, mL, 2);
   }
+  if (f.freckles) s += [[-1, 0], [-1, 1], [-1, 2], [1, 0], [1, 1], [1, 2]].map(([sd, i]) => C(R1(cx + sd * (bx - 8 + i * 8)), R1(by - 8 + (i % 2) * 6), 1.8, '#d9895a')).join('');
   if (f.whisk) s += L('M110 154 L70 146 M110 162 L68 164 M190 154 L230 146 M190 162 L232 164', f.whiskColor || '#8a6a5a', 2.5);
   return s;
 }
@@ -740,6 +742,21 @@ def('dragon', { stars: 5, bg: '#e2f7ea', treat: 'berry', sparkleSneeze: true, so
     const spikes = [[214, 238], [240, 230], [262, 210]].map(([x, y]) => P(`M${x - 10} ${y + 6} L${x} ${y - 18} L${x + 10} ${y + 2}Z`, wg, OUT(wg), '', 3)).join('');
     return spikes + thick('M200 252 Q250 252 268 200', c, 20) + wing + mirror(wing) + stdBody(c, bl) + L('M122 238 H178 M118 254 H182', '#e6d27a', 3) + horn + mirror(horn) + C(150, 124, 76, c, OUT(c))
       + [130, 150, 170].map(x => P(`M${x - 9} 52 L${x} 32 L${x + 9} 52Z`, wg, OUT(wg), '', 3)).join('') + E(150, 160, 44, 30, '#b5f0cc'); } });
+// the 8-year-old helper nurse: short red hair, blue eyes, freckles, mint scrubs
+def('nurse', { name: 'Nurse', human: true, bg: '#dff7f0', treat: 'lolly', sound: () => SFX.yay(),
+  face: { ex: 24, ey: 100, er: 12, ny: 118, my: 132, nose: 'button', iris: '#4a9be8', lash: true, freckles: true, bx: 40, by: 124, mouthLine: '#a8475a' },
+  draw() { const sk = '#ffe1cc', hr = '#e0663a', ho = '#a8431f', sc = '#7fd6c2', sd = '#56b8a3', sh = '#ffffff';
+    const arm = thick('M114 170 Q100 200 96 228', sc, 16) + C(95, 236, 11, sk, OUT(sk));
+    const leg = `<rect x="114" y="226" width="34" height="54" rx="6" fill="${sd}" stroke="${OUT(sd)}" stroke-width="3"/>` + E(130, 286, 21, 9, sh, '#bbb');
+    return leg + mirror(leg) + arm + mirror(arm)
+      + P('M112 160 L188 160 L202 236 Q150 244 98 236Z', sc, OUT(sc)) + P('M134 160 L150 184 L166 160Z', sk, OUT(sc), '', 3)
+      + L('M126 160 Q124 196 150 200 Q176 196 174 160', '#7a5cff', 5) + C(150, 204, 8, '#dfe6ee', '#6f7c8c', '', 3)
+      + `<rect x="166" y="178" width="26" height="16" rx="3" fill="#fff" stroke="#9cb6cf" stroke-width="2"/>` + P(heartPath(179, 186, 5), '#ff6b8a')
+      + `<rect x="140" y="146" width="20" height="18" fill="${sk}"/>`
+      + E(150, 84, 70, 60, hr, ho) + C(90, 104, 10, sk, OUT(sk)) + C(210, 104, 10, sk, OUT(sk))
+      + E(150, 98, 57, 56, sk, OUT(sk))
+      + P('M88 96 Q84 34 150 30 Q216 34 212 96 Q198 62 170 58 Q154 76 130 60 Q104 66 88 96Z', hr, ho, '', 3)
+      + P('M116 40 L184 40 L176 16 L124 16Z', '#fff', '#c9d3df', '', 3) + `<rect x="146" y="20" width="8" height="16" fill="#ff5a5a"/><rect x="142" y="24" width="16" height="8" fill="#ff5a5a"/>`; } });
 function speak(sp, el) {
   const S = SP[sp]; S.sound();
   if (S.sparkleSneeze && el) setTimeout(() => { const sv = $('svg', el); if (!sv || !sv.isConnected) return; const r = sv.getBoundingClientRect(), n = anchors(S).nose; FX.sparkle(r.left + n[0] / 300 * r.width, r.top + n[1] / 300 * r.height, 26); }, 950);
@@ -1103,16 +1120,12 @@ screens.title = {
       ${['puppy', 'bunny', 'coco'].map(sp => `<div class="pt tpet" data-sp="${sp}"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>`).join('')}
       <div class="lbl-btn" id="tRoom"><button class="icon-btn" aria-label="My Clinic">${ICON.house}</button><span>My Clinic</span></div>
       <div class="lbl-btn" id="tShop"><button class="icon-btn yellow" aria-label="Shop">${ICON.bag}</button><span>Shop</span></div>
-      <div class="gear" id="tGear">${ICON.gear}<svg viewBox="0 0 100 100"><circle class="ring" cx="50" cy="50" r="44"/></svg></div>`;
+      <button class="icon-btn gear" id="tGear" aria-label="Settings">${ICON.gear.replace(/#fff/g, '#c9b8ff').replace(/#9a7bb0/g, '#fff')}</button>`;
     $('#tPlay', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); newDay(); go('wait', 'start'); });
     $('#tRoom', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('room'); });
     $('#tShop', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('shop'); });
     $$('.tpet', el).forEach(p => p.addEventListener('pointerdown', () => { Snd.init(); Music.start(); SP[p.dataset.sp].sound(); hop(p); }));
-    // Parents: hold the faint gear for 3 seconds to reset progress.
-    const gear = $('#tGear', el); let ht = null;
-    const cancel = () => { clearTimeout(ht); gear.classList.remove('holding'); };
-    gear.addEventListener('pointerdown', e => { e.preventDefault(); gear.classList.add('holding'); ht = setTimeout(() => { cancel(); resetModal(); }, 3000); });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => gear.addEventListener(t, cancel));
+    $('#tGear', el).addEventListener('click', () => { Snd.init(); SFX.pop(); openSettings(); });
     this.el = el; this.layout();
   },
   layout() {
@@ -1130,6 +1143,16 @@ screens.title = {
     place(ps[2], Math.min(W - sz - 4, bx + bw - sz * 0.55), H * 0.97 - sz, sz, sz);
   }
 };
+function openSettings() {
+  const ov = h(`<div class="overlay"><div class="modal"><h2>Settings</h2>
+    <div class="srow2"><button class="snd" id="stSnd">${save.muted ? ICON.spkOff : ICON.spkOn}<span>${save.muted ? 'Sound off' : 'Sound on'}</span></button></div>
+    <div class="srow2"><button class="danger" id="stReset">Reset</button><button id="stClose">Close</button></div></div></div>`);
+  stage.appendChild(ov);
+  $('#stSnd', ov).onclick = () => { Snd.init(); Music.start(); Snd.setMuted(!save.muted); ov.remove(); openSettings(); };
+  $('#stClose', ov).onclick = () => ov.remove();
+  $('#stReset', ov).onclick = () => { ov.remove(); resetModal(); };
+  ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
+}
 function resetModal() {
   const ov = h(`<div class="overlay"><div class="modal"><h2>Reset progress?</h2><p>This erases all stickers, stars, pets, photos and decorations on this device.</p><button id="rmNo">Cancel</button><button class="danger" id="rmYes">Reset</button></div></div>`);
   stage.appendChild(ov);
@@ -1230,6 +1253,7 @@ screens.exam = {
     el.innerHTML = `<div class="exam-bg"><div class="wall"></div><div class="stripe"></div><div class="floor"></div></div>
       <div class="exd abs" id="exJars">${JARS}</div><div class="exd abs" id="exChart">${CHART}</div>
       <div class="table abs">${TABLE}</div>
+      <div class="pt helper" id="exN"><div class="mv"><div class="md idle"><div class="rx">${animalSVG('nurse', 'happy', null, 0, { theme: day.theme })}</div></div></div></div>
       ${this.helper ? `<div class="pt helper" id="exH"><div class="mv"><div class="md idle"><div class="rx">${animalSVG('shiloh', 'happy', null, 0, { theme: day.theme })}</div></div></div></div>` : ''}
       <div class="pt" id="exA"><div class="mv"><div class="md"><div class="rx">${animalSVG(p.sp, 'sad', this.probs, 0, { theme: day.theme })}</div></div></div></div>
       ${themeLayer()}
@@ -1240,6 +1264,7 @@ screens.exam = {
     $$('.tool', el).forEach(t => t.addEventListener('pointerdown', e => this.down(e, t)));
     this.a.addEventListener('pointerdown', () => { if (this.busy || this.drag) return; speak(p.sp, this.a); hop(this.a); });
     if (this.helper) { const hh = $('#exH', el); hh.addEventListener('pointerdown', () => { SFX.shiloh(); hop(hh); }); }
+    const nn = $('#exN', el); nn.addEventListener('pointerdown', () => { SFX.yay(); hop(nn); FX.sparkle(...elCenter(nn), 8); });
     this.mv = $('.mv', this.a); this.md = $('.md', this.a);
     this.mv.style.transition = 'none'; this.mv.style.transform = `translateX(${-(this.ax + this.size + 50)}px)`;
     this.onMove = e => this.move(e); this.onUp = e => this.up(e);
@@ -1257,7 +1282,10 @@ screens.exam = {
     });
   },
   fillBubble() { const k = this.probs[this.pi]; $('.bubble .ic', this.el).innerHTML = ICONS[k === 'thorn' && this.S.human ? 'thornHand' : k]; $('.bubble .w', this.el).textContent = PROBLEMS[k].word; },
-  cheer() { if (!this.helper) return; const hh = $('#exH', this.el); hop(hh); SFX.clap(); FX.sparkle(...elCenter(hh), 8); },
+  cheer() {
+    const nn = $('#exN', this.el); hop(nn); SFX.clap(); FX.sparkle(...elCenter(nn), 8); if (Math.random() < 0.5) setTimeout(() => SFX.yay(), 250);
+    if (this.helper) { const hh = $('#exH', this.el); setTimeout(() => hop(hh), 120); FX.sparkle(...elCenter(hh), 8); }
+  },
   leave() { window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); window.removeEventListener('pointercancel', this.onUp); $$('.ghost').forEach(g => g.remove()); this.drag = null; },
   layout() {
     const el = this.el, port = isPortrait(), cols = port ? 4 : 7;
@@ -1278,6 +1306,7 @@ screens.exam = {
     }
     this.size = size; this.ax = ax; this.ay = ay;
     place(this.a, ax, ay, size, size);
+    { const ns = size * (port ? 0.47 : 0.62); place($('#exN', el), port ? W - ns - 6 : Math.min(W - ns - 6, ax + size * 0.86), bottom + size * 0.02 - ns * 0.97, ns, ns); }
     if (this.helper) { const hs = size * (port ? 0.42 : 0.55); place($('#exH', el), port ? 6 : Math.max(6, ax - hs * 0.78), bottom + size * 0.02 - hs * 0.97, hs, hs); }
     const tw = size * 1.15; place($('.table', el), ax + size / 2 - tw / 2, bottom - size * 0.04, tw, tw * 0.375);
     const k = decoK();
@@ -1366,7 +1395,8 @@ screens.exam = {
     $('.bubble', el).classList.add('out'); $('.tray', el).classList.add('off');
     this.setFace('okay'); await wait(350, g);
     this.setFace('happy'); this.md.className = 'md dance'; speak(p.sp, this.a);
-    if (this.helper) { $('#exH .md', el).className = 'md dance'; SFX.clap(); }
+    if (this.helper) $('#exH .md', el).className = 'md dance';
+    $('#exN .md', el).className = 'md dance'; SFX.clap(); setTimeout(() => SFX.yay(), 700);
     FX.confetti(110); SFX.cheer();
     const ban = h(`<div class="banner">All better!</div>`); ban.style.top = Math.min(H - 130, this.ay + this.size + 20) + 'px'; el.appendChild(ban);
     await wait(1300, g);
