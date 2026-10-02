@@ -304,6 +304,32 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .album .polaroid:nth-child(even){transform:rotate(3deg)}
 .album .polaroid.hopit{animation:hop .45s}
 .album .none{width:200px;height:200px;opacity:.25;margin:40px auto}
+/* ---------- adoption center ---------- */
+.adopt-bg .wall{position:absolute;left:0;top:0;width:100%;background:#e6f8ef;background-image:radial-gradient(#cdeedd 14%,transparent 15%);background-size:60px 60px}
+.adopt-bg .floor{position:absolute;left:0;bottom:0;width:100%;background:#d8eec8;background-image:repeating-linear-gradient(90deg,transparent 0 118px,#c4e2b0 118px 122px)}
+.adopt-sign{border-color:#8ee3c8;color:#3aa889}
+.bed{position:absolute}
+.bed svg{width:100%;height:100%}
+.bedheart{position:absolute;width:56px;height:56px;margin-left:-28px;animation:arrowB 1.2s ease-in-out infinite;pointer-events:none}
+.bedheart svg{width:100%;height:100%}
+.allhome{position:absolute;left:50%;top:50%;width:260px;height:260px;margin:-130px 0 0 -130px;animation:pulse 1.6s infinite}
+.allhome svg{width:100%;height:100%}
+.pill.tick{color:#ff5d8f;box-shadow:0 6px 0 #ffb3cd,0 10px 16px rgba(0,0,0,.1)}
+.pill.shake{animation:shake2 .4s}
+.apanel{border-color:#ffb3cd;min-width:520px}
+.astep{display:flex;gap:16px;align-items:center;justify-content:center;flex-wrap:wrap;min-height:110px}
+.ahint{width:100px;height:100px;animation:uRub .6s ease-in-out infinite}
+.ahint svg{width:100%;height:100%}
+.swatch{width:84px;height:84px;border-radius:50%;border:6px solid #fff;box-shadow:0 5px 0 rgba(0,0,0,.12)}
+.swatch.on{box-shadow:0 0 0 6px #ff8fb1}
+.nbtn{font-size:40px;padding:12px 26px;border-radius:30px;background:#fff;box-shadow:0 6px 0 #ffd166;color:#ff5d8f}
+.nbtn.on{background:#ff8fb1;color:#fff;box-shadow:0 6px 0 #d94f80}
+.okbtn{width:100px;height:100px;border-radius:50%;background:#5cc06b;box-shadow:0 8px 0 #3a8a48;padding:22px}
+.okbtn svg,.shuf svg{width:100%;height:100%}
+.shuf{width:80px;height:80px;border-radius:50%;background:#7cc6fe;box-shadow:0 6px 0 #4a98d4;padding:16px}
+.cname{font-size:40px;color:#ff5d8f;line-height:1}
+.pname{position:absolute;left:50%;transform:translateX(-50%);bottom:-8%;background:#ffffffee;border-radius:14px;padding:0 10px;font-size:22px;color:#a05a80;white-space:nowrap;pointer-events:none;box-shadow:0 2px 4px rgba(0,0,0,.12)}
+.starsrow .tk{display:flex;align-items:center;gap:6px;color:#ff5d8f;margin-left:24px}
 </style>
 </head>
 <body>
@@ -314,6 +340,7 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
   <div class="screen" id="s-closed"></div>
   <div class="screen" id="s-room"></div>
   <div class="screen" id="s-shop"></div>
+  <div class="screen" id="s-adopt"></div>
   <button class="icon-btn" id="mute" aria-label="Sound on or off"></button>
 </div>
 <canvas id="fx"></canvas>
@@ -345,7 +372,7 @@ function run(fn) { fn().catch(e => { if (e !== ABORT) console.error(e); }); }
 // ---------- saving ----------
 const SAVE_KEY = 'drEvieClinic.v3';
 // stars = stars to spend in the shop; owned = bought decorations; pets = bought pets
-const freshSave = muted => ({ v: 2, stars: 0, stickers: {}, muted: !!muted, days: 0, owned: {}, pets: [], photos: [], petLove: {} });
+const freshSave = muted => ({ v: 2, stars: 0, stickers: {}, muted: !!muted, days: 0, owned: {}, pets: [], photos: [], petLove: {}, adoptTickets: 1, petNames: {}, petCollar: {} });
 let save = freshSave(false);
 function load() {
   let s = null; try { s = JSON.parse(localStorage.getItem(SAVE_KEY)); } catch (e) {}
@@ -359,6 +386,9 @@ function load() {
   if (!Array.isArray(save.pets)) save.pets = [];
   if (!Array.isArray(save.photos)) save.photos = [];
   if (!save.petLove || typeof save.petLove !== 'object') save.petLove = {};
+  if (typeof save.adoptTickets !== 'number') save.adoptTickets = 1;
+  if (!save.petNames || typeof save.petNames !== 'object') save.petNames = {};
+  if (!save.petCollar || typeof save.petCollar !== 'object') save.petCollar = {};
 }
 function store() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) {} }
 
@@ -850,12 +880,14 @@ function accSVG(S, o) {
   const hp = HAT[S.id] || [150, S.face.ey - 70, 0], np = [150, NECK[S.id] || 198], w = o.wear ? WEAR[o.wear] : null;
   const atHead = inner => `<g transform="translate(${hp[0]} ${hp[1]}) rotate(${hp[2] || 0}) scale(1.3)">${inner}</g>`;
   let s = '';
+  if (o.collar && !(w && w.slot === 'neck')) s += L(`M${np[0] - 46} ${np[1] - 4} Q${np[0]} ${np[1] + 16} ${np[0] + 46} ${np[1] - 4}`, o.collar, 9) + C(np[0], np[1] + 14, 7, '#ffd84a', '#c99a10', '', 3);
   if (o.theme === 'snow' && !(w && w.slot === 'neck')) s += scarf(np);
   if (w && w.slot === 'neck') s += w.draw(np);
   if (w && w.slot === 'eyes') s += w.draw(S.face);
   if (w && w.slot === 'head') s += atHead(w.draw()); else if (o.theme === 'birthday') s += atHead(partyHat());
   return s;
 }
+const petOpts = sp => ({ collar: save.petCollar[sp] || null });
 const BODY_CACHE = {};
 function animalSVG(sp, mood = 'sad', pr = null, step = 0, o = null) {
   const S = SP[sp]; if (!BODY_CACHE[sp]) BODY_CACHE[sp] = S.draw();
@@ -943,6 +975,9 @@ const ICON = {
   brush: V(`<g transform="rotate(-30 50 50)"><rect x="44" y="6" width="12" height="36" rx="6" fill="#ffd166" stroke="#e0a020" stroke-width="3"/><rect x="18" y="40" width="64" height="24" rx="9" fill="#b79cff" stroke="#8a6fd6" stroke-width="4"/>${L('M26 64 v16 M34 64 v16 M42 64 v16 M50 64 v16 M58 64 v16 M66 64 v16 M74 64 v16', '#8a6fd6', 3)}</g>`),
   camera: V(`<rect x="30" y="18" width="26" height="16" rx="4" fill="#3b7fb8"/><rect x="10" y="28" width="80" height="58" rx="12" fill="#7cc6fe" stroke="#3b7fb8" stroke-width="5"/>` + C(50, 57, 19, '#fff', '#3b7fb8') + C(50, 57, 9, '#3b7fb8') + C(76, 40, 5, '#ffe066')),
   bow: V(P('M50 50 L16 28 L16 72Z', '#ff6fa0', '#d94f80', '', 4) + P('M50 50 L84 28 L84 72Z', '#ff6fa0', '#d94f80', '', 4) + C(50, 50, 10, '#ff8fb1', '#d94f80', '', 4)),
+  adopt: V(P(heartPath(50, 54, 44), '#ff6fa0', '#d94f80', '', 5) + C(50, 64, 11, '#fff') + C(36, 48, 5.5, '#fff') + C(45, 41, 5.5, '#fff') + C(55, 41, 5.5, '#fff') + C(64, 48, 5.5, '#fff')),
+  adoptW: V(P(heartPath(50, 54, 44), '#fff', '#fff', '', 5) + C(50, 64, 11, '#ff6fa0') + C(36, 48, 5.5, '#ff6fa0') + C(45, 41, 5.5, '#ff6fa0') + C(55, 41, 5.5, '#ff6fa0') + C(64, 48, 5.5, '#ff6fa0')),
+  sponge: V(`<rect x="16" y="34" width="68" height="44" rx="14" fill="#ffd166" stroke="#e0a020" stroke-width="5"/>` + C(34, 50, 5, '#e0a020') + C(56, 60, 6, '#e0a020') + C(70, 46, 4, '#e0a020') + C(28, 22, 9, '#bfe9ff', '#7cc6fe', '', 3) + C(48, 14, 6, '#bfe9ff', '#7cc6fe', '', 3) + C(80, 22, 7, '#bfe9ff', '#7cc6fe', '', 3)),
   check: V(L('M22 52 L42 72 L80 30', '#fff', 14)),
   arrow: V(P('M30 20 H70 V50 H86 L50 88 L14 50 H30Z', '#ffe14d', '#e0a800', '', 5))
 };
@@ -1119,10 +1154,12 @@ screens.title = {
       <div class="bld abs">${BUILDING}<div class="sign-t"><div class="t1">Dr. Evie's</div><div class="t2">Animal Clinic</div></div><button class="big-play" id="tPlay" style="left:205px;top:400px" aria-label="Play">${ICON.play}</button></div>
       ${['puppy', 'bunny', 'coco'].map(sp => `<div class="pt tpet" data-sp="${sp}"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>`).join('')}
       <div class="lbl-btn" id="tRoom"><button class="icon-btn" aria-label="My Clinic">${ICON.house}</button><span>My Clinic</span></div>
+      <div class="lbl-btn" id="tAdopt"><button class="icon-btn" style="background:#ff8fb1;box-shadow:0 7px 0 #d94f80" aria-label="Adopt a pet">${ICON.adoptW}</button><span>Adopt</span></div>
       <div class="lbl-btn" id="tShop"><button class="icon-btn yellow" aria-label="Shop">${ICON.bag}</button><span>Shop</span></div>
       <button class="icon-btn gear" id="tGear" aria-label="Settings">${ICON.gear.replace(/#fff/g, '#c9b8ff').replace(/#9a7bb0/g, '#fff')}</button>`;
     $('#tPlay', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); newDay(); go('wait', 'start'); });
     $('#tRoom', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('room'); });
+    $('#tAdopt', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('adopt'); });
     $('#tShop', el).addEventListener('click', () => { Snd.init(); Music.start(); SFX.pop(); go('shop'); });
     $$('.tpet', el).forEach(p => p.addEventListener('pointerdown', () => { Snd.init(); Music.start(); SP[p.dataset.sp].sound(); hop(p); }));
     $('#tGear', el).addEventListener('click', () => { Snd.init(); SFX.pop(); openSettings(); });
@@ -1136,6 +1173,7 @@ screens.title = {
     place($('.sun', el), W - 230, 40, 130, 130);
     const r = $('#tRoom', el); r.style.left = '20px'; r.style.top = '20px';
     const sb = $('#tShop', el); sb.style.left = '20px'; sb.style.top = '178px';
+    const ab = $('#tAdopt', el); ab.style.left = '20px'; ab.style.top = '336px';
     const ps = $$('.tpet', el), sz = port ? 250 : Math.min(190, W * 0.2);
     if (port) { place(ps[0], 40, H * 0.95 - sz, sz, sz); place(ps[1], W / 2 - sz * 0.4, H * 0.97 - sz * 0.8, sz * 0.8, sz * 0.8); place(ps[2], W - sz - 40, H * 0.95 - sz, sz, sz); place($('.sun', el), W - 230, 140, 130, 130); return; }
     place(ps[0], Math.max(4, bx - sz * 0.45), H * 0.97 - sz, sz, sz);
@@ -1453,12 +1491,13 @@ screens.closed = {
   enter(el) {
     const g = gen; this.el = el; save.days = (save.days || 0) + 1;
     for (const k in save.petLove) save.petLove[k] = Math.max(0, save.petLove[k] - 1);
+    const gotTicket = save.adoptTickets < 3; if (gotTicket) save.adoptTickets++;
     store();
     el.innerHTML = `<div class="room"></div><div class="abs" style="inset:0;background:#ffffff66"></div>
       <div class="center"><div class="panel pop-in">
         <div class="ptitle">Great job, Dr. Evie!</div>
         <div class="srow">${day.patients.map(p => `<div class="sslot" style="transform:scale(0)">${stickerHTML(p.sp)}</div>`).join('')}</div>
-        <div class="starsrow">${ICON.star}<span>+${day.starsToday}</span></div>
+        <div class="starsrow">${ICON.star}<span>+${day.starsToday}</span>${gotTicket ? `<span class="tk">${ICON.adopt}+1</span>` : ''}</div>
         <div class="btns"><button class="icon-btn" id="cRoom" aria-label="My Clinic">${ICON.house}</button><button class="big-play replay" id="cAgain" aria-label="Play again">${ICON.replay}</button><button class="icon-btn yellow" id="cShop" aria-label="Shop">${ICON.bag}</button></div>
       </div></div>`;
     this.layout();
@@ -1531,8 +1570,8 @@ function openBook() {
 function walkPets(layer, ids, z) {
   const g = gen; layer.innerHTML = '';
   const pets = ids.map((sp, i) => {
-    const y = ids.length > 1 ? z.y0 + (z.y1 - z.y0) * i / (ids.length - 1) : z.y1;
-    const el = h(`<div class="pt pet" style="z-index:${Math.round(y)}"><div class="flip"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div></div>`);
+    const y = Math.min(ids.length > 1 ? z.y0 + (z.y1 - z.y0) * i / (ids.length - 1) : (z.y0 + z.y1) / 2, H - z.size * 0.16);  // room for the name tag
+    const el = h(`<div class="pt pet" style="z-index:${Math.round(y)}"><div class="flip"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'happy', null, 0, petOpts(sp))}</div></div></div></div>${save.petNames[sp] ? `<div class="pname">${save.petNames[sp]}</div>` : ''}</div>`);
     layer.appendChild(el);
     const p = { sp, el, flip: $('.flip', el), md: $('.md', el), x: rand(z.x0, z.x1), tx: 0, wait: rand(0.3, 2.5), speed: rand(55, 85) };
     place(el, p.x - z.size / 2, y - z.size * 0.95, z.size, z.size);
@@ -1564,8 +1603,8 @@ function walkPets(layer, ids, z) {
 function openCare(sp) {
   const love = () => save.petLove[sp] || 0;
   const hearts = () => [0, 1, 2, 3, 4].map(i => `<span>${V(P(heartPath(50, 54, 36), i < love() ? '#ff6b8a' : '#fff', i < love() ? '#d6456a' : '#ffc2d4', '', 6))}</span>`).join('');
-  const ov = h(`<div class="overlay"><div class="care"><button class="icon-btn x" aria-label="Close">${ICON.x}</button><div class="hearts">${hearts()}</div>
-    <div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(sp, 'happy')}</div></div></div></div>
+  const ov = h(`<div class="overlay"><div class="care"><button class="icon-btn x" aria-label="Close">${ICON.x}</button>${save.petNames[sp] ? `<div class="cname">${save.petNames[sp]}</div>` : ''}<div class="hearts">${hearts()}</div>
+    <div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(sp, 'happy', null, 0, petOpts(sp))}</div></div></div></div>
     <div class="cbtns"><button data-a="feed" aria-label="Feed">${ICON.bowl}</button><button data-a="brush" aria-label="Brush">${ICON.brush}</button><button data-a="fetch" aria-label="Play fetch">${TOOLS.toy}</button></div></div></div>`);
   stage.appendChild(ov);
   const pet = $('.cpet', ov); let busy = false; speak(sp, pet);
@@ -1597,6 +1636,95 @@ function openAlbum() {
   $('.x', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
   ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
   $$('.polaroid', ov).forEach(pz => pz.addEventListener('click', () => { pz.classList.remove('hopit'); void pz.offsetWidth; pz.classList.add('hopit'); speak(pz.dataset.sp, pz); }));
+}
+
+/* =====================================================================
+   ADOPTION CENTER — give a waiting pet a bath, a collar and a name.
+   ===================================================================== */
+const ADOPTABLE = ['puppy', 'bigdog', 'dachshund', 'poodle', 'fox', 'kitten', 'bunny', 'hamster', 'guineapig', 'turtle', 'lamb', 'duckling', 'parrot', 'penguin', 'pony', 'piglet', 'panda'];
+const PET_NAMES = ['Max', 'Bella', 'Luna', 'Charlie', 'Daisy', 'Milo', 'Rosie', 'Teddy', 'Ollie', 'Lily', 'Buddy', 'Penny', 'Biscuit', 'Peanut', 'Sunny', 'Pip', 'Ziggy', 'Maple', 'Waffles', 'Honey'];
+const COLLARS = ['#ff6b8a', '#4aa3ff', '#ffd166', '#5cc06b', '#9b7be8'];
+const BED_COLS = ['#ffb3c6', '#bfe4ff', '#ffe08a'];
+function adoptables() {   // the same three wait until a day is played or a pet is adopted
+  const a = ADOPTABLE.filter(sp => !save.pets.includes(sp));
+  let seed = (save.days || 0) * 7 + save.pets.length * 13 + 5;
+  const r = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a.slice(0, 3);
+}
+screens.adopt = {
+  enter(el) {
+    this.el = el;
+    el.innerHTML = `<div class="adopt-bg"><div class="wall"></div><div class="floor"></div></div><div class="shop-sign adopt-sign">Adopt a Pet</div>
+      <div class="topbar"><button class="icon-btn" id="aHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button><div class="tr"><div class="pill tick">${ICON.adopt}<b>${save.adoptTickets}</b></div></div></div>
+      <div class="beds"></div>`;
+    $('#aHome', el).addEventListener('click', () => { SFX.pop(); go('title'); });
+    this.layout();
+  },
+  layout() {
+    const el = this.el, port = isPortrait(), FL = Math.round(H * (port ? 0.5 : 0.56));
+    $('.adopt-bg .wall', el).style.height = FL + 'px'; $('.adopt-bg .floor', el).style.height = (H - FL) + 'px';
+    $('.pill.tick b', el).textContent = save.adoptTickets;
+    const list = adoptables(), beds = $('.beds', el);
+    if (!list.length) { beds.innerHTML = `<div class="allhome">${ICON.adopt}</div>`; return; }
+    const n = list.length, size = Math.min(port ? 240 : 260, W * 0.84 / 3 - 10), y = FL + (H - FL) * (port ? 0.35 : 0.5);
+    beds.innerHTML = list.map((sp, i) => { const x = W * 0.08 + W * 0.84 * (i + 0.5) / n;
+      return `<div class="bed" style="left:${R1(x - size * 0.55)}px;top:${R1(y - size * 0.22)}px;width:${R1(size * 1.1)}px;height:${R1(size * 0.44)}px"><svg viewBox="0 0 200 80">${E(100, 48, 96, 28, BED_COLS[i], OUT(BED_COLS[i]))}${E(100, 40, 78, 16, shade(BED_COLS[i], 0.45))}</svg></div>
+        <div class="bedheart" style="left:${R1(x)}px;top:${R1(y - size - 64)}px">${ICON.adopt}</div>
+        <div class="pt apet" data-sp="${sp}" style="left:${R1(x - size / 2)}px;top:${R1(y - size * 0.9)}px;width:${R1(size)}px;height:${R1(size)}px"><div class="mv"><div class="md idle" style="animation-delay:${rand(-2, 0).toFixed(2)}s"><div class="rx">${animalSVG(sp, 'okay')}</div></div></div></div>`; }).join('');
+    $$('.apet', beds).forEach(p => p.addEventListener('click', () => this.tap(p)));
+  },
+  tap(p) {
+    const sp = p.dataset.sp; speak(sp, p); hop(p);
+    if (save.adoptTickets < 1) { const t = $('.pill.tick', this.el); t.classList.remove('shake'); void t.offsetWidth; t.classList.add('shake'); setTimeout(() => SFX.boop(), 300); return; }
+    setTimeout(() => openAdopt(sp), 350);
+  }
+};
+function openAdopt(sp) {
+  const S = SP[sp], taken = Object.values(save.petNames), st = { collar: COLLARS[0], name: null, step: 'wash' };
+  const freshNames = () => shuffle(PET_NAMES.filter(n => !taken.includes(n))).slice(0, 3);
+  let names = freshNames(); st.name = names[0];
+  const ov = h(`<div class="overlay"><div class="care apanel"><button class="icon-btn x" aria-label="Close">${ICON.x}</button>
+    <div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(sp, 'okay')}</div></div></div></div><div class="astep"></div></div></div>`);
+  stage.appendChild(ov);
+  const pet = $('.cpet', ov), stepEl = $('.astep', ov), svg = $('svg', pet);
+  const close = () => ov.remove();
+  $('.x', ov).addEventListener('click', () => { SFX.pop(); close(); });
+  // 1. bath time: tap the mud off
+  const MUD = [[108, 150], [194, 118], [150, 230], [116, 254], [196, 244]];
+  $('.a-over', svg).innerHTML = MUD.map(([x, y]) => `<g class="mud">${C(x, y, 16, '#a0784a', null, 'opacity=".6"')}${C(x + 13, y + 8, 9, '#a0784a', null, 'opacity=".55"')}</g>`).join('');
+  stepEl.innerHTML = `<div class="ahint">${ICON.sponge}</div>`;
+  pet.addEventListener('click', e => {
+    if (st.step !== 'wash') { speak(sp, pet); hop(pet); return; }
+    const m = $('.mud', svg); if (m) m.remove();
+    SFX.bubbles(); FX.bubbles(e.clientX, e.clientY, 10);
+    if (!$('.mud', svg)) { st.step = 'collar'; SFX.sparkle(); FX.sparkle(...elCenter(pet), 26); $('.a-face', svg).innerHTML = face(S.face, 'happy'); hop(pet); collarStep(); }
+  });
+  const setAcc = () => { $('.a-acc', svg).innerHTML = accSVG(S, { collar: st.collar }); };
+  // 2. pick a collar
+  function collarStep() {
+    setAcc();
+    stepEl.innerHTML = COLLARS.map(c => `<button class="swatch ${c === st.collar ? 'on' : ''}" data-c="${c}" style="background:${c}" aria-label="Collar color"></button>`).join('') + `<button class="okbtn" aria-label="OK">${ICON.check}</button>`;
+    $$('.swatch', stepEl).forEach(b => b.addEventListener('click', () => { st.collar = b.dataset.c; $$('.swatch', stepEl).forEach(x => x.classList.toggle('on', x === b)); setAcc(); SFX.pop(); hop(pet); }));
+    $('.okbtn', stepEl).addEventListener('click', () => { SFX.chime(); nameStep(); });
+  }
+  // 3. pick a name
+  function nameStep() {
+    st.step = 'name';
+    stepEl.innerHTML = names.map(n => `<button class="nbtn ${n === st.name ? 'on' : ''}">${n}</button>`).join('') + `<button class="shuf" aria-label="Other names">${ICON.replay}</button><button class="okbtn" style="background:#ff6fa0;box-shadow:0 8px 0 #d94f80" aria-label="Adopt">${ICON.adoptW}</button>`;
+    $$('.nbtn', stepEl).forEach(b => b.addEventListener('click', () => { st.name = b.textContent; $$('.nbtn', stepEl).forEach(x => x.classList.toggle('on', x === b)); SFX.pop(); }));
+    $('.shuf', stepEl).addEventListener('click', () => { names = freshNames(); st.name = names[0]; SFX.boing(); nameStep(); });
+    $('.okbtn', stepEl).addEventListener('click', finish);
+  }
+  function finish() {
+    if (save.adoptTickets < 1 || save.pets.includes(sp)) { close(); return; }
+    save.pets.push(sp); save.petCollar[sp] = st.collar; save.petNames[sp] = st.name; save.petLove[sp] = 2; save.adoptTickets--; store();
+    close(); SFX.fanfare(); FX.confetti(140); setTimeout(() => speak(sp), 900);
+    const sc = screens.adopt; if (cur !== 'adopt') return;
+    sc.layout();
+    const ban = h(`<div class="banner">Welcome home,<br>${st.name}!</div>`); ban.style.top = (H * 0.2) + 'px'; sc.el.appendChild(ban);
+    setTimeout(() => ban.classList.add('out'), 2600); setTimeout(() => ban.remove(), 3100);
+  }
 }
 
 /* =====================================================================
