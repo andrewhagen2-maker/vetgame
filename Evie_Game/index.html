@@ -1836,12 +1836,19 @@ function openAdopt(sp) {
   }
   function finish() {
     if (save.adoptTickets < 1 || save.pets.includes(sp)) { close(); return; }
-    save.pets.push(sp); save.petCollar[sp] = st.collar; save.petNames[sp] = st.name; save.petLove[sp] = 2; save.adoptTickets--; store();
+    save.pets.push(sp); save.petCollar[sp] = st.collar; save.petNames[sp] = st.name; save.petLove[sp] = 2; save.adoptTickets--;
+    if (!save.house) newHouse(); else importAdopted();
+    store();
     close(); SFX.fanfare(); FX.confetti(140); setTimeout(() => speak(sp), 900);
     const sc = screens.adopt; if (cur !== 'adopt') return;
     sc.layout();
     const ban = h(`<div class="banner">Welcome home,<br>${st.name}!</div>`); ban.style.top = (H * 0.2) + 'px'; sc.el.appendChild(ban);
     setTimeout(() => ban.classList.add('out'), 2600); setTimeout(() => ban.remove(), 3100);
+    if (save.house.pets.some(q => q.adopt === sp)) {   // hop over to see the new pet at the Pet House
+      const hb = h(`<button class="big-play pop-in" style="background:radial-gradient(circle at 35% 30%,#a8f0b4,#5cc06b 70%);box-shadow:0 10px 0 #3a8a48;padding:30px" aria-label="Pet House">${ICON.phouse}</button>`);
+      place(hb, W - 190, H - 200, 150, 150); sc.el.appendChild(hb);
+      hb.addEventListener('click', () => { SFX.pop(); go('house', 'in'); });
+    } else toast('Pet House is full!');
   }
 }
 
@@ -1851,28 +1858,33 @@ function openAdopt(sp) {
    ===================================================================== */
 const HKINDS = { dog: { art: 'puppy', cost: 60 }, cat: { art: 'kitten', cost: 60 }, snake: { art: 'snake', cost: 60, move: 'slither' }, frog: { art: 'frog', cost: 60, move: 'hop' },
   bird: { art: 'parrot', cost: 60, move: 'fly' }, fox: { art: 'fox', cost: 60 }, unicorn: { art: 'unicorn', cost: 150 }, dragon: { art: 'dragon', cost: 150 } };
+const SHOPK = Object.keys(HKINDS);   // sold in the Pet Shop
+Object.assign(HKINDS, { bunny: { art: 'bunny' }, hamster: { art: 'hamster' }, guineapig: { art: 'guineapig' }, turtle: { art: 'turtle' }, lamb: { art: 'lamb' },
+  duckling: { art: 'duckling', move: 'hop' }, penguin: { art: 'penguin' }, pony: { art: 'pony' }, piglet: { art: 'piglet' }, panda: { art: 'panda' } });
 const ALLK = Object.keys(HKINDS);
+// adopted animals: which Pet House kind they act like
+const ADOPT_KIND = { puppy: 'dog', bigdog: 'dog', dachshund: 'dog', poodle: 'dog', kitten: 'cat', fox: 'fox', parrot: 'bird' };
 const bowl = (c, top) => V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', c, OUT(c), '', 4) + top + E(50, 52, 38, 9, shade(c, 0.5), OUT(c), '', 3));
 const HITEMS = {
   water: { cost: 0, for: ALLK, icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#7cc6fe', '#3b7fb8', '', 4) + E(50, 52, 38, 9, '#bfe9ff', '#3b7fb8', '', 3) + E(38, 50, 9, 2.5, '#fff')) },
-  ball: { cost: 0, for: ['dog', 'cat', 'fox', 'dragon'], icon: TOOLS.toy },
+  ball: { cost: 0, for: ['dog', 'cat', 'fox', 'dragon', 'hamster', 'penguin', 'pony', 'piglet', 'panda'], icon: TOOLS.toy },
   dogfood: { cost: 15, for: ['dog'], icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#ff6b6b', '#c43a3a', '', 4) + E(50, 52, 38, 9, '#ffd0d0', '#c43a3a', '', 3) + [[36, 48], [48, 44], [60, 48], [54, 52], [42, 52]].map(([x, y]) => C(x, y, 6, '#a8733c')).join('')) },
   bone: { cost: 20, for: ['dog', 'fox'], icon: TREATS.bone },
   leash: { cost: 25, for: ['dog'], icon: V(L('M24 80 Q18 22 60 22 Q88 24 82 52', '#ff5a5a', 7) + E(24, 84, 11, 8, 'none', '#c43a3a', '', 6) + C(82, 56, 7, '#ffd84a', '#c99a10', '', 3)) },
-  catfood: { cost: 15, for: ['cat'], icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#b79cff', '#8a6fd6', '', 4) + E(50, 52, 38, 9, '#e6dcff', '#8a6fd6', '', 3) + P('M62 40 L74 32 L74 48Z', '#ff9f5a') + E(48, 40, 16, 8, '#ff9f5a')) },
+  catfood: { cost: 15, for: ['cat', 'penguin'], icon: V(P('M12 52 H88 Q86 86 50 86 Q14 86 12 52Z', '#b79cff', '#8a6fd6', '', 4) + E(50, 52, 38, 9, '#e6dcff', '#8a6fd6', '', 3) + P('M62 40 L74 32 L74 48Z', '#ff9f5a') + E(48, 40, 16, 8, '#ff9f5a')) },
   yarn: { cost: 20, for: ['cat'], icon: V(C(46, 54, 30, '#ff8fb1', '#d94f80', '', 4) + L('M24 44 Q46 60 68 40 M22 60 Q46 76 72 58 M36 28 Q42 54 34 82', '#d94f80', 3) + L('M70 72 Q90 80 84 94', '#d94f80', 3)) },
   litter: { cost: 25, for: ['cat'], icon: V(`<rect x="12" y="46" width="76" height="40" rx="8" fill="#8ee3c8" stroke="#4fae8a" stroke-width="4"/>` + E(50, 48, 34, 7, '#f6dfa4') + L('M74 18 L58 44', '#b79cff', 6) + E(54, 48, 11, 6, '#b79cff')) },
   mouse: { cost: 20, for: ['cat', 'snake'], icon: V(L('M72 62 Q92 60 90 82', '#ff8fb1', 4) + E(46, 60, 28, 18, '#c9c9d6', '#8a8aa0', '', 4) + C(32, 44, 9, '#ffc2d4', '#8a8aa0', '', 3) + C(22, 60, 3, '#333') + C(17, 64, 3, '#ff8fb1')) },
   heatlamp: { cost: 30, for: ['snake', 'frog', 'dragon'], icon: V(L('M30 92 H70', '#888', 6) + L('M50 92 V44', '#888', 5) + P('M24 44 L76 44 L66 18 H34Z', '#ff6b6b', '#c43a3a', '', 4) + E(50, 50, 18, 7, '#ffd166') + L('M30 62 l-8 8 M70 62 l8 8 M50 60 v10', '#ffb84d', 3)) },
-  bugs: { cost: 15, for: ['frog', 'bird'], icon: V(`<rect x="26" y="30" width="48" height="58" rx="10" fill="#e8f7ff" stroke="#7cc6fe" stroke-width="4"/><rect x="23" y="20" width="54" height="13" rx="4" fill="#9b7be8"/>` + [[40, 50], [58, 60], [44, 72]].map(([x, y]) => E(x, y, 4, 3, '#333') + E(x - 3, y - 4, 4, 2.5, '#bfe9ff') + E(x + 3, y - 4, 4, 2.5, '#bfe9ff')).join('')) },
-  lilypad: { cost: 25, for: ['frog'], icon: V(E(50, 66, 42, 24, '#5cc06b', '#3a8a48', '', 4) + P('M50 66 L92 58 L90 74Z', '#fff') + [0, 72, 144, 216, 288].map(a => E(R1(46 + Math.cos(a / 57.3) * 8), R1(46 + Math.sin(a / 57.3) * 8), 7, 5, '#ff8fb1')).join('') + C(46, 46, 5, '#ffd84a')) },
-  seeds: { cost: 15, for: ['bird'], icon: V(P('M26 32 Q50 22 74 32 L80 86 Q50 94 20 86Z', '#e9d3a8', '#b98a4f', '', 4) + L('M30 34 Q50 42 70 34', '#b98a4f', 4) + [[40, 60], [52, 68], [62, 58], [46, 76]].map(([x, y]) => E(x, y, 3, 5, '#5a4a3a')).join('')) },
+  bugs: { cost: 15, for: ['frog', 'bird', 'turtle', 'duckling'], icon: V(`<rect x="26" y="30" width="48" height="58" rx="10" fill="#e8f7ff" stroke="#7cc6fe" stroke-width="4"/><rect x="23" y="20" width="54" height="13" rx="4" fill="#9b7be8"/>` + [[40, 50], [58, 60], [44, 72]].map(([x, y]) => E(x, y, 4, 3, '#333') + E(x - 3, y - 4, 4, 2.5, '#bfe9ff') + E(x + 3, y - 4, 4, 2.5, '#bfe9ff')).join('')) },
+  lilypad: { cost: 25, for: ['frog', 'turtle', 'duckling'], icon: V(E(50, 66, 42, 24, '#5cc06b', '#3a8a48', '', 4) + P('M50 66 L92 58 L90 74Z', '#fff') + [0, 72, 144, 216, 288].map(a => E(R1(46 + Math.cos(a / 57.3) * 8), R1(46 + Math.sin(a / 57.3) * 8), 7, 5, '#ff8fb1')).join('') + C(46, 46, 5, '#ffd84a')) },
+  seeds: { cost: 15, for: ['bird', 'hamster', 'guineapig', 'duckling'], icon: V(P('M26 32 Q50 22 74 32 L80 86 Q50 94 20 86Z', '#e9d3a8', '#b98a4f', '', 4) + L('M30 34 Q50 42 70 34', '#b98a4f', 4) + [[40, 60], [52, 68], [62, 58], [46, 76]].map(([x, y]) => E(x, y, 3, 5, '#5a4a3a')).join('')) },
   bell: { cost: 20, for: ['bird'], icon: V(P('M50 18 Q26 22 26 56 L20 72 H80 L74 56 Q74 22 50 18Z', '#ffd84a', '#c99a10', '', 4) + C(50, 78, 7, '#c99a10') + C(50, 13, 5, 'none', '#c99a10', '', 3)) },
   cage: { cost: 40, for: ['bird'], home: true, icon: V(`<rect x="14" y="80" width="72" height="12" rx="4" fill="#b79cff" stroke="#8a6fd6" stroke-width="3"/>` + L('M20 80 V44 Q20 14 50 14 Q80 14 80 44 V80 M35 80 V22 M50 80 V14 M65 80 V22 M20 50 H80', '#9a7bb0', 4) + C(50, 9, 5, 'none', '#9a7bb0', '', 3)) },
-  berries: { cost: 15, for: ['fox', 'bird', 'unicorn'], icon: TREATS.berry },
-  hay: { cost: 20, for: ['unicorn'], icon: V(`<rect x="14" y="36" width="72" height="48" rx="8" fill="#ffd166" stroke="#d9a520" stroke-width="4"/>` + ['#ff8fb1', '#7cc6fe', '#8ee3c8', '#b79cff'].map((c, i) => L(`M18 ${46 + i * 10} H82`, c, 4)).join('')) },
+  berries: { cost: 15, for: ['fox', 'bird', 'unicorn', 'bunny', 'hamster', 'guineapig', 'turtle', 'lamb', 'pony', 'piglet', 'panda'], icon: TREATS.berry },
+  hay: { cost: 20, for: ['unicorn', 'bunny', 'guineapig', 'lamb', 'pony', 'panda'], icon: V(`<rect x="14" y="36" width="72" height="48" rx="8" fill="#ffd166" stroke="#d9a520" stroke-width="4"/>` + ['#ff8fb1', '#7cc6fe', '#8ee3c8', '#b79cff'].map((c, i) => L(`M18 ${46 + i * 10} H82`, c, 4)).join('')) },
   gold: { cost: 30, for: ['dragon'], icon: V([[30, 74], [54, 76], [76, 72], [42, 58], [64, 56], [52, 40]].map(([x, y]) => C(x, y, 14, '#ffd84a', '#c99a10', '', 3)).join('')) },
-  bed: { cost: 30, for: ['dog', 'cat', 'fox', 'unicorn'], icon: V(E(50, 64, 44, 22, '#ff8fb1', '#d94f80', '', 4) + E(50, 58, 32, 12, '#ffd0e0')) }
+  bed: { cost: 30, for: ['dog', 'cat', 'fox', 'unicorn', 'bunny', 'lamb', 'piglet', 'panda'], icon: V(E(50, 64, 44, 22, '#ff8fb1', '#d94f80', '', 4) + E(50, 58, 32, 12, '#ffd0e0')) }
 };
 const FEELS = ['shy', 'angry', 'scared', 'sad', 'curious'];
 const FEEL_WORD = { shy: 'Shy', angry: 'Angry', scared: 'Scared', sad: 'Sad', curious: 'Curious' };
@@ -1888,7 +1900,18 @@ function feelOver(feel, S) {
   if (feel === 'curious') return `<g><text x="${150 + f.ex + 30}" y="${f.ey - 30}" font-size="44" font-weight="bold" fill="#7a5cff" font-family="Arial,sans-serif">?</text><text x="${150 - f.ex - 56}" y="${f.ey - 40}" font-size="32" font-weight="bold" fill="#b79cff" font-family="Arial,sans-serif">?</text><animate attributeName="opacity" values="1;.3;1" dur="1.2s" repeatCount="indefinite"/></g>`;
   return '';
 }
-function newHouse() { save.house = { coins: 60, pets: [], items: {}, n: 0 }; store(); }
+function newHouse() { save.house = { coins: 60, pets: [], items: {}, n: 0 }; importAdopted(); store(); }
+const artOf = p => p.art || HKINDS[p.kind].art;
+const hpetSVG = (p, mood = 'happy') => animalSVG(artOf(p), mood, null, 0, p.adopt ? petOpts(p.adopt) : null);
+function importAdopted() {   // pets adopted at the adoption center move into the Pet House too
+  const hs = save.house; if (!hs) return 0; let added = 0;
+  for (const sp of save.pets) {
+    if (!save.petNames[sp] || hs.pets.some(q => q.adopt === sp) || hs.pets.length >= 5) continue;
+    hs.n++; hs.pets.push({ id: hs.n, kind: ADOPT_KIND[sp] || sp, art: sp, adopt: sp, name: save.petNames[sp], feel: { shy: 0, angry: 0, scared: 0, sad: 0, curious: 0 }, medals: {}, want: null, needPee: false });
+    added++;
+  }
+  return added;
+}
 function coinPop(el, n) { const [x, y] = elCenter(el); for (let i = 0; i < 12; i++) FX.add({ x, y, vx: rand(-5, 5) * SC, vy: rand(-9, -4) * SC, g: 0.35 * SC, life: 0, max: 50, size: rand(16, 24) * SC, color: '#ffd84a', shape: 'circle', rot: 0, vr: 0, drag: 0.98 }); SFX.coin(); }
 function toast(txt) { const t = h(`<div class="toast">${txt}</div>`); stage.appendChild(t); setTimeout(() => t.remove(), 1400); }
 function namePicker(art, onDone, onCancel) {
@@ -1928,6 +1951,7 @@ const MUD = [[108, 150], [194, 118], [150, 230], [116, 254], [196, 244]];
 const mudSVG = (n = 5) => MUD.slice(0, n).map(([x, y]) => `<g class="mud">${C(x, y, 16, '#a0784a', null, 'opacity=".6"')}${C(x + 13, y + 8, 9, '#a0784a', null, 'opacity=".55"')}</g>`).join('');
 const zzz = () => `<g><text x="200" y="70" font-size="36" font-weight="bold" fill="#9b7be8" font-family="Arial,sans-serif">z</text><text x="226" y="44" font-size="46" font-weight="bold" fill="#b79cff" font-family="Arial,sans-serif">Z</text><animateTransform attributeName="transform" type="translate" values="0 0;8 -10;0 0" dur="2s" repeatCount="indefinite"/></g>`;
 function houseFix(h0) { // older Pet House saves get the new fields
+  if (importAdopted()) store();
   if (!h0.decor) h0.decor = {}; if (!h0.wall) h0.wall = 'cream';
   h0.pets.forEach(p => { if (!p.medals) p.medals = {}; });
 }
@@ -1996,10 +2020,10 @@ screens.house = {
       const caged = p.kind === 'bird' && this.cage;
       const sz = caged ? this.cage.w * 0.62 : size;
       const ly0 = FL + (H - FL) * 0.38, ly1 = H - size * 0.2, lane = ly0 + (ly1 - ly0) * (house.pets.length > 1 ? i / (house.pets.length - 1) : 0.5);
-      const e = { p, K, move, caged, size: sz, lane, x: rand(W * 0.15, W * 0.85), y: move === 'fly' ? rand(150, FL - 60) : lane, tx: 0, ty: 0, wait: rand(0.5, 2), speed: move === 'fly' ? 140 : move === 'slither' ? 45 : 70,
+      const e = { p, K, art: artOf(p), move, caged, size: sz, lane, x: rand(W * 0.15, W * 0.85), y: move === 'fly' ? rand(150, FL - 60) : lane, tx: 0, ty: 0, wait: rand(0.5, 2), speed: move === 'fly' ? 140 : move === 'slither' ? 45 : 70,
         wantIn: rand(4, 10), peeIn: rand(40, 70), accIn: 40, tempSad: 0, hurtIn: rand(60, 130), dirtyIn: rand(35, 80) };
       if (caged) { e.x = this.cage.x + this.cage.w / 2; e.y = this.cage.y + this.cage.w * 0.82; }
-      e.el = h(`<div class="pt hpet" style="z-index:${Math.round(e.y)}"><div class="flip"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(K.art, 'happy')}</div></div></div></div><div class="pname">${p.name}${Object.keys(p.medals || {}).map(() => '<span class="medal"></span>').join('')}</div><div class="wantb"></div></div>`);
+      e.el = h(`<div class="pt hpet" style="z-index:${Math.round(e.y)}"><div class="flip"><div class="mv"><div class="md idle"><div class="rx">${hpetSVG(p)}</div></div></div></div><div class="pname">${p.name}${Object.keys(p.medals || {}).map(() => '<span class="medal"></span>').join('')}</div><div class="wantb"></div></div>`);
       $$('.medal', e.el).forEach(m => { m.innerHTML = ICON.medal; });
       e.flip = $('.flip', e.el); e.md = $('.md', e.el);
       layer.appendChild(e.el);
@@ -2032,7 +2056,7 @@ screens.house = {
   },
   pos(e) { place(e.el, e.x - e.size / 2, e.y - e.size * 0.95, e.size, e.size); e.el.style.zIndex = e.caged ? 3 : Math.round(e.y); },
   refresh(e) {
-    const p = e.p, S = SP[e.K.art], sv = $('svg', e.el), w = p.want, asleep = this.sleeping && e.wait > 0;
+    const p = e.p, S = SP[e.art], sv = $('svg', e.el), w = p.want, asleep = this.sleeping && e.wait > 0;
     const mood = asleep ? 'sleep' : p.hurt || e.tempSad > 0 || (w && w.feel !== 'shy' && w.feel !== 'curious') ? 'sad' : w ? 'okay' : 'happy';
     $('.a-face', sv).innerHTML = face(S.face, mood);
     $('.a-over', sv).innerHTML = (asleep ? zzz() : p.hurt ? overlay(p.hurt, 0, S) : w ? feelOver(w.feel, S) : '') + (p.dirty ? mudSVG() : '');
@@ -2043,7 +2067,7 @@ screens.house = {
   makeWant(e) {
     const likes = likesOf(e.p.kind), have = likes.filter(id => save.house.items[id]);
     const item = have.length && Math.random() < 0.7 ? pick(have) : pick(likes);
-    e.p.want = { feel: pick(FEELS), item }; store(); this.refresh(e); speak(e.K.art, e.el);
+    e.p.want = { feel: pick(FEELS), item }; store(); this.refresh(e); speak(e.art, e.el);
   },
   second() {
     if (!save.house || this.sleeping) return;
@@ -2053,15 +2077,15 @@ screens.house = {
       if (p.hurt) continue;
       if (!p.want && !p.needPee && (e.wantIn -= 1) <= 0) this.makeWant(e);
       if (!p.dirty && (e.dirtyIn -= 1) <= 0) { p.dirty = true; store(); this.refresh(e); }
-      if (!p.needPee && (e.hurtIn -= 1) <= 0) { p.hurt = pick(HURTS); store(); this.refresh(e); speak(e.K.art, e.el); SFX.sneeze(); continue; }
+      if (!p.needPee && (e.hurtIn -= 1) <= 0) { p.hurt = pick(HURTS); store(); this.refresh(e); speak(e.art, e.el); SFX.sneeze(); continue; }
       if (p.kind !== 'dog') continue;
       if (!p.needPee && (e.peeIn -= 1) <= 0) { p.needPee = true; e.accIn = 40; store(); this.refresh(e); SFX.bark(1.75, 3); }
       else if (p.needPee && (e.accIn -= 1) <= 0) this.accident(e);
     }
   },
   toVet(e) {   // off to Dr. Evie's exam table
-    SFX.siren(); speak(e.K.art, e.el);
-    day = { patients: [{ sp: e.K.art, prob: e.p.hurt, done: false }], next: 0, starsToday: 0, theme: null, vet: { id: e.p.id, name: e.p.name } };
+    SFX.siren(); speak(e.art, e.el);
+    day = { patients: [{ sp: e.art, prob: e.p.hurt, done: false }], next: 0, starsToday: 0, theme: null, vet: { id: e.p.id, name: e.p.name } };
     setTimeout(() => { if (cur === 'house') go('exam'); }, 500);
   },
   accident(e) {
@@ -2088,7 +2112,7 @@ screens.house = {
       const gain = save.house.pets.length * 5; save.house.coins += gain; save.house.slept = Date.now(); store();
       SFX.cheer(); FX.sparkle(innerWidth / 2, innerHeight / 3, 30); toast(`Good morning! +${gain}`);
       $('.pill.coins b', this.el).textContent = save.house.coins; coinPop($('.pill.coins', this.el));
-      for (const e of this.ents) { e.wait = rand(0.5, 2); this.refresh(e); speak(e.K.art, e.el); }
+      for (const e of this.ents) { e.wait = rand(0.5, 2); this.refresh(e); speak(e.art, e.el); }
     });
   },
   peeWalk() {
@@ -2098,7 +2122,7 @@ screens.house = {
     SFX.pop(); const g = gen;
     const ds = 200, yd = h(`<div class="yard"><div class="ysky"></div><div class="ygrass"></div><div class="abs" style="left:${R1(W * 0.62)}px;top:${R1(H * 0.6 - 300)}px;width:200px;height:300px">${TREE}</div>
       <div class="ypud" style="left:${R1(W * 0.62 - 40)}px;top:${R1(H * 0.6 + 70)}px;width:150px"></div>
-      <div class="pt ydog" style="left:-220px;top:${R1(H * 0.6 + 100 - ds)}px;width:${ds}px;height:${ds}px"><div class="mv"><div class="md walk"><div class="rx">${animalSVG(e.K.art, 'happy')}</div></div></div></div></div>`);
+      <div class="pt ydog" style="left:-220px;top:${R1(H * 0.6 + 100 - ds)}px;width:${ds}px;height:${ds}px"><div class="mv"><div class="md walk"><div class="rx">${animalSVG(e.art, 'happy')}</div></div></div></div></div>`);
     stage.appendChild(yd);
     run(async () => {
       await wait(60, g); $('.ydog', yd).style.left = R1(W * 0.62 - 150) + 'px';
@@ -2106,7 +2130,7 @@ screens.house = {
       $('.ypud', yd).style.transform = 'scale(1)'; SFX.tinkle();
       await wait(1500, g);
       const ban = h(`<div class="banner">Good job!</div>`); ban.style.top = (H * 0.15) + 'px'; yd.appendChild(ban);
-      $('.ydog .md', yd).className = 'md dance'; speak(e.K.art, $('.ydog', yd));
+      $('.ydog .md', yd).className = 'md dance'; speak(e.art, $('.ydog', yd));
       e.p.needPee = false; e.peeIn = rand(50, 80); save.house.coins += 10; store();
       coinPop($('.ydog', yd)); FX.confetti(50);
       await wait(1800, g); yd.remove();
@@ -2114,9 +2138,10 @@ screens.house = {
     });
   },
   openCare(e) {
-    const p = e.p, art = e.K.art; speak(art, e.el); hop(e.el);
+    const p = e.p, art = e.art; speak(art, e.el); hop(e.el);
+    const petSVG = hpetSVG(p);
     const ov = h(`<div class="overlay"><div class="care hcare"><button class="icon-btn x" aria-label="Close">${ICON.x}</button><div class="cname">${p.name}</div><div class="lvls"></div>
-      <div class="hrow"><div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(art, 'happy')}</div></div></div></div><div class="wantbig"></div></div><div class="itray"></div></div></div>`);
+      <div class="hrow"><div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${petSVG}</div></div></div></div><div class="wantbig"></div></div><div class="itray"></div></div></div>`);
     stage.appendChild(ov);
     const close = () => { ov.remove(); this.refresh(e); };
     $('.x', ov).addEventListener('click', () => { SFX.pop(); close(); });
@@ -2186,9 +2211,9 @@ screens.petshop = {
     $$('.tab', el).forEach(t => t.classList.toggle('on', t.dataset.tab === this.tab));
     $('.pill.coins b', el).textContent = house.coins;
     const full = house.pets.length >= 5;
-    if (this.tab === 'pets') g.innerHTML = ALLK.map(k => `<div class="card ${full || house.coins < HKINDS[k].cost ? 'poor' : ''}" data-k="${k}"><div class="pic">${animalSVG(HKINDS[k].art, 'happy')}</div><div class="price">${ICON.coin}<b>${HKINDS[k].cost}</b></div></div>`).join('');
+    if (this.tab === 'pets') g.innerHTML = SHOPK.map(k => `<div class="card ${full || house.coins < HKINDS[k].cost ? 'poor' : ''}" data-k="${k}"><div class="pic">${animalSVG(HKINDS[k].art, 'happy')}</div><div class="price">${ICON.coin}<b>${HKINDS[k].cost}</b></div></div>`).join('');
     else if (this.tab === 'stuff') g.innerHTML = Object.keys(HITEMS).map(id => { const it = HITEMS[id], own = house.items[id];
-      return `<div class="card ${own ? 'owned' : house.coins < it.cost ? 'poor' : ''}" data-i="${id}"><div class="mini">${it.for.length < ALLK.length ? it.for.slice(0, 3).map(k => `<span>${animalSVG(HKINDS[k].art, 'happy')}</span>`).join('') : ''}</div><div class="pic">${it.icon}</div>${own ? `<div class="got">${ICON.check}</div>` : it.cost ? `<div class="price">${ICON.coin}<b>${it.cost}</b></div>` : `<div class="free">FREE</div>`}</div>`; }).join('');
+      return `<div class="card ${own ? 'owned' : house.coins < it.cost ? 'poor' : ''}" data-i="${id}"><div class="mini">${it.for.length < ALLK.length ? it.for.filter(k => SHOPK.includes(k)).concat(it.for.filter(k => !SHOPK.includes(k))).slice(0, 3).map(k => `<span>${animalSVG(HKINDS[k].art, 'happy')}</span>`).join('') : ''}</div><div class="pic">${it.icon}</div>${own ? `<div class="got">${ICON.check}</div>` : it.cost ? `<div class="price">${ICON.coin}<b>${it.cost}</b></div>` : `<div class="free">FREE</div>`}</div>`; }).join('');
     else g.innerHTML = Object.keys(HDECOR).map(id => { const d = HDECOR[id], own = house.decor[id], on = d.wall && house.wall === d.wall;
       return `<div class="card ${own ? 'owned' : house.coins < d.cost ? 'poor' : ''} ${on ? 'wallon' : ''}" data-d="${id}"><div class="pic">${d.wall ? wallSwatch(d.wall) : d.svg}</div>${own ? `<div class="got">${ICON.check}</div>` : `<div class="price">${ICON.coin}<b>${d.cost}</b></div>`}</div>`; }).join('');
     $$('.card', g).forEach(c => c.addEventListener('click', () => this.tap(c)));
