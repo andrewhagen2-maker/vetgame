@@ -364,6 +364,26 @@ button{font:inherit;color:inherit;border:none;padding:0;margin:0;background:none
 .hpic{width:220px;height:200px}
 .hpic svg{width:100%;height:100%}
 .hempty{position:absolute;left:100px;top:112px;display:flex;align-items:center;gap:10px;font-size:34px;color:#ff5d8f;background:#fff;border-radius:24px;padding:8px 22px;box-shadow:0 6px 16px rgba(0,0,0,.12);z-index:19;animation:arrowB 1s ease-in-out infinite}
+.hdecor{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.hdecor>*{pointer-events:auto}
+.hdeco.tap{animation:boing2 .5s}
+.hnight{position:absolute;inset:0;z-index:15;pointer-events:none}
+.nighttime .lampglow{opacity:.75}
+.moonbtn{position:relative;width:72px;height:72px;padding:14px;background:#5a4fb0;box-shadow:0 6px 0 #3a3080}
+.md.sleepy{animation:sleepy 2.4s ease-in-out infinite}
+@keyframes sleepy{0%,100%{transform:scale(1,1)}50%{transform:scale(1.03,.97)}}
+.pname .medal{display:inline-block;width:20px;height:20px;vertical-align:middle;margin-left:3px}
+.pname .medal svg,.lmedal svg{width:100%;height:100%}
+.lmedal{display:inline-block;width:24px;height:24px}
+.brushbtn{width:90px;height:90px;padding:6px;border-radius:24px;background:#f3eeff;box-shadow:0 5px 0 #c9b8ff}
+.brushbtn svg{width:100%;height:100%}
+.medalpop{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:85;background:#fffdf0;border:10px solid #ffd84a;border-radius:40px;padding:20px 40px;display:flex;flex-direction:column;align-items:center;gap:6px;animation:popIn .5s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+.medalpop .mi{width:160px;height:160px}
+.medalpop .mi svg,.medalpop .mc svg{width:100%;height:100%}
+.medalpop .mt{font-size:46px;color:#ff5d8f}
+.medalpop .mc{display:flex;align-items:center;gap:6px;font-size:44px;color:#c98a10}
+.medalpop .mc svg{width:52px;height:52px}
+.card.wallon{box-shadow:0 0 0 6px #ff8fb1,0 7px 0 #8ee3a0}
 .toast{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:80;font-size:46px;color:#7a5cff;background:#fff;border-radius:34px;padding:10px 30px;box-shadow:0 8px 20px rgba(0,0,0,.2);pointer-events:none;animation:fadeIn .2s;white-space:nowrap}
 /* ---------- adoption center ---------- */
 .adopt-bg .wall{position:absolute;left:0;top:0;width:100%;background:#e6f8ef;background-image:radial-gradient(#cdeedd 14%,transparent 15%);background-size:60px 60px}
@@ -639,10 +659,11 @@ function stdBody(c, l, o = {}) { const by = o.by || 230, rx = o.rx || 70, ry = o
 function face(f, mood) {
   const cx = 150, ex = f.ex, ey = f.ey, er = f.er, eL = f.eyeLine || '#3a2a3a', mL = f.mouthLine || '#4a2a32';
   let s = '';
-  const bx = f.bx || ex + 22, by = f.by || ey + 32, bo = mood === 'happy' ? 0.7 : 0.4;
+  const bx = f.bx || ex + 22, by = f.by || ey + 32, bo = mood === 'happy' || mood === 'sleep' ? 0.7 : 0.4;
   s += E(cx - bx, by, 15, 9, '#ff7fa6', null, `opacity="${bo}"`) + E(cx + bx, by, 15, 9, '#ff7fa6', null, `opacity="${bo}"`);
   for (const side of [-1, 1]) {
     const x = cx + side * ex;
+    if (mood === 'sleep') { s += L(`M${R1(x - er * 0.85)} ${ey} Q${x} ${R1(ey + er * 0.8)} ${R1(x + er * 0.85)} ${ey}`, eL, 5); continue; }
     if (mood === 'happy') { s += L(`M${R1(x - er * 0.85)} ${ey + 4} Q${x} ${R1(ey - er * 1.15)} ${R1(x + er * 0.85)} ${ey + 4}`, eL, 6); continue; }
     const y = ey + (mood === 'sad' ? 2 : 0);
     if (f.iris) { s += E(x, y, R1(er * 0.9), er, f.iris, '#1d1720', '', 2.5) + E(x, y + 1, R1(er * 0.5), R1(er * 0.7), '#1d1720'); }
@@ -655,6 +676,7 @@ function face(f, mood) {
       s += L(`M${R1(x + side * er)} ${y - er - 6} Q${R1(x + side * er * 0.1)} ${y - er - 8} ${R1(x - side * er * 0.8)} ${y - er - 17}`, f.brow || eL, 5);
     }
   }
+  if (mood === 'sleep') mood = 'okay';
   const ny = f.ny, my = f.my, nose = f.nose;
   if (nose === 'dog') s += P(`M${cx - 13} ${ny - 6} Q${cx} ${ny - 10} ${cx + 13} ${ny - 6} Q${cx + 12} ${ny + 8} ${cx} ${ny + 9} Q${cx - 12} ${ny + 8} ${cx - 13} ${ny - 6}Z`, '#3b2a2a') + E(cx - 4, ny - 3, 4, 2.5, '#fff', null, 'opacity=".7"');
   else if (nose === 'cat' || nose === 'bunny') s += P(`M${cx - 8} ${ny - 4} H${cx + 8} L${cx} ${ny + 5}Z`, '#ff8fab', '#c45a79', '', 2.5);
@@ -1056,6 +1078,9 @@ const ICON = {
   adoptW: V(P(heartPath(50, 54, 44), '#fff', '#fff', '', 5) + C(50, 64, 11, '#ff6fa0') + C(36, 48, 5.5, '#ff6fa0') + C(45, 41, 5.5, '#ff6fa0') + C(55, 41, 5.5, '#ff6fa0') + C(64, 48, 5.5, '#ff6fa0')),
   sponge: V(`<rect x="16" y="34" width="68" height="44" rx="14" fill="#ffd166" stroke="#e0a020" stroke-width="5"/>` + C(34, 50, 5, '#e0a020') + C(56, 60, 6, '#e0a020') + C(70, 46, 4, '#e0a020') + C(28, 22, 9, '#bfe9ff', '#7cc6fe', '', 3) + C(48, 14, 6, '#bfe9ff', '#7cc6fe', '', 3) + C(80, 22, 7, '#bfe9ff', '#7cc6fe', '', 3)),
   coin: V(C(50, 50, 42, '#ffd84a', '#c99a10', '', 6) + C(50, 50, 29, 'none', '#e8b820', '', 4) + P(starPath(50, 52, 17, 8), '#fff3b0', '#e8b820', '', 2)),
+  moon: V(P('M62 12 A40 40 0 1 0 88 66 A32 32 0 1 1 62 12Z', '#fff3b0', '#fff3b0', '', 3) + C(30, 24, 4, '#fff') + C(20, 44, 3, '#fff')),
+  vet: V(C(50, 50, 42, '#fff', '#ff5a5a', '', 7) + `<rect x="42" y="22" width="16" height="56" rx="4" fill="#ff5a5a"/><rect x="22" y="42" width="56" height="16" rx="4" fill="#ff5a5a"/>`),
+  medal: V(P('M30 6 L44 40 L56 40 L42 6Z', '#4aa3ff') + P('M70 6 L56 40 L44 40 L58 6Z', '#ff6b8a') + C(50, 62, 30, '#ffd84a', '#c99a10', '', 5) + P(starPath(50, 63, 16, 7), '#fff3b0', '#e0b020', '', 2)),
   potty: V(P('M50 8 Q22 50 24 66 Q28 92 50 92 Q72 92 76 66 Q78 50 50 8Z', '#ffe066', '#e0a800', '', 4) + E(40, 62, 6, 10, '#fff', null, 'opacity=".6"')),
   phouse: V(P('M50 10 L92 46 H80 V90 H20 V46 H8Z', '#fff', '#fff', '', 4) + C(50, 70, 9, '#5cc06b') + C(39, 58, 4.5, '#5cc06b') + C(46, 53, 4.5, '#5cc06b') + C(54, 53, 4.5, '#5cc06b') + C(61, 58, 4.5, '#5cc06b')),
   check: V(L('M22 52 L42 72 L80 30', '#fff', 14)),
@@ -1380,7 +1405,7 @@ screens.exam = {
       ${themeLayer()}
       <div class="bubble hidden"><div class="t1"></div><div class="t2"></div><div class="ic"></div><div class="w"></div></div>
       <div class="tray off">${this.tools.map(t => `<div class="tool" data-t="${t}">${TOOLS[t]}</div>`).join('')}</div>
-      <div class="topbar">${progressHTML(false)}<div class="tr">${starPill()}<div class="bookic">${ICON.book}</div></div></div>`;
+      <div class="topbar">${progressHTML(false)}<div class="tr">${day.vet ? `<div class="pill coins">${ICON.coin}<b>${save.house ? save.house.coins : 0}</b></div>` : starPill()}<div class="bookic">${ICON.book}</div></div></div>`;
     this.a = $('#exA', el); this.fillBubble(); this.layout();
     $$('.tool', el).forEach(t => t.addEventListener('pointerdown', e => this.down(e, t)));
     this.a.addEventListener('pointerdown', () => { if (this.busy || this.drag) return; speak(p.sp, this.a); hop(this.a); });
@@ -1529,6 +1554,16 @@ screens.exam = {
     SFX.nom(); const [cx, cy] = toClient(mx, my);
     for (const sc of [0.75, 0.45, 0]) { tr.style.transform = `scale(${sc})`; FX.crumbs(cx, cy, 6); await wait(160, g); }
     tr.remove(); ban.classList.add('out');
+    if (day.vet) {           // a Pet House pet: home again, with coins
+      const hp = save.house && save.house.pets.find(q => q.id === day.vet.id); if (hp) hp.hurt = null;
+      if (save.house) { save.house.coins += 10; $('.pill.coins b', el).textContent = save.house.coins; }
+      store(); coinPop(this.a); toast(`${day.vet.name} +10`);
+      await wait(900, g);
+      const hb = h(`<button class="big-play pop-in" style="background:radial-gradient(circle at 35% 30%,#a8f0b4,#5cc06b 70%);box-shadow:0 10px 0 #3a8a48;padding:30px" aria-label="Pet House">${ICON.phouse}</button>`);
+      place(hb, W - 190, H - 200, 150, 150); el.appendChild(hb);
+      hb.addEventListener('click', () => { SFX.pop(); go('house', 'in'); });
+      return;
+    }
     // sticker + stars
     const add = S.stars + (p.amb ? 2 : 0);
     save.stickers[p.sp] = (save.stickers[p.sp] || 0) + 1; save.stars += add; day.starsToday += add; p.done = true; store();
@@ -1873,18 +1908,43 @@ function namePicker(art, onDone, onCancel) {
   draw();
 }
 
+// ---------- house decorations (bought in the Pet Shop's House tab) ----------
+const TVSVG = `<svg viewBox="0 0 200 150"><rect x="10" y="8" width="180" height="110" rx="14" fill="#3a3a4a"/><rect x="22" y="20" width="156" height="86" rx="6" fill="#9fdcff"/>${['#ff6b6b', '#ffd84a', '#5cc06b', '#4aa3ff'].map((c, i) => `<path d="M${50 + i * 8} 100 A${50 - i * 8} ${50 - i * 8} 0 0 1 ${150 - i * 8} 100" fill="none" stroke="${c}" stroke-width="7"/>`).join('')}<rect x="80" y="118" width="40" height="14" fill="#555"/><rect x="50" y="130" width="100" height="10" rx="5" fill="#555"/></svg>`;
+const LAMP = `<svg viewBox="0 0 70 230" overflow="visible"><ellipse class="lampglow" cx="35" cy="70" rx="70" ry="60" fill="#fff3b0" opacity="0"/>${E(35, 222, 28, 8, '#9b7650')}<rect x="31" y="50" width="8" height="172" fill="#9b7650"/>${P('M10 56 L60 56 L50 14 H20Z', '#ffd166', '#e0a020', '', 4)}</svg>`;
+const PAINTING = `<svg viewBox="0 0 120 100"><rect x="4" y="4" width="112" height="92" rx="6" fill="#c98b55" stroke="#8b5a34" stroke-width="4"/><rect x="14" y="14" width="92" height="72" fill="#bfe7ff"/>${C(86, 32, 10, '#ffd84a')}${P('M14 86 Q50 50 106 70 V86Z', '#8fdc7a')}${P(heartPath(46, 46, 14), '#ff8fb1')}</svg>`;
+const WALLS = { cream: 'repeating-linear-gradient(90deg,#fff3dc 0 44px,#ffeacc 44px 88px)', pink: 'repeating-linear-gradient(90deg,#ffe3ef 0 44px,#ffd3e4 44px 88px)', blue: 'repeating-linear-gradient(90deg,#e3f4ff 0 44px,#d0eaff 44px 88px)', green: 'repeating-linear-gradient(90deg,#e6f8ef 0 44px,#d3f0e0 44px 88px)' };
+const wallSwatch = c => `<svg viewBox="0 0 100 100">${[0, 1, 2, 3].map(i => `<rect x="${i * 25}" y="0" width="25" height="100" fill="${{ pink: ['#ffe3ef', '#ffc2d8'], blue: ['#e3f4ff', '#bfe4ff'], green: ['#e6f8ef', '#bfe9cf'] }[c][i % 2]}"/>`).join('')}<rect x="2" y="2" width="96" height="96" rx="10" fill="none" stroke="#ccc" stroke-width="4"/></svg>`;
+const HDECOR = {
+  rug: { cost: 30, svg: RUG, pos: (FL, k) => ({ x: W * 0.3, y: FL + (H - FL) * 0.3, w: W * 0.44, h: (H - FL) * 0.32 }) },
+  plant: { cost: 25, svg: PLANT, pos: (FL, k) => ({ x: W - 130 * k, y: H - 210 * k, w: 120 * k, h: 200 * k }) },
+  painting: { cost: 30, svg: PAINTING, pos: (FL, k) => ({ x: W * 0.05, y: Math.max(110, FL * 0.14), w: 120 * k, h: 100 * k }) },
+  lamp: { cost: 25, svg: LAMP, pos: (FL, k) => ({ x: W * 0.03 + 264 * k, y: FL + 14 - 180 * k, w: 70 * k, h: 180 * k }) },
+  tank: { cost: 50, svg: TANK, pos: (FL, k) => ({ x: W * 0.22, y: Math.max(104, FL * 0.18), w: 180 * k, h: 150 * k }) },
+  tv: { cost: 60, svg: TVSVG, pos: (FL, k) => ({ x: W * 0.62, y: FL * 0.28, w: 200 * k, h: 150 * k }) },
+  wp_pink: { cost: 20, wall: 'pink' }, wp_blue: { cost: 20, wall: 'blue' }, wp_green: { cost: 20, wall: 'green' }
+};
+const HURTS = ['thorn', 'scrape', 'bonk', 'sniffles', 'tummy', 'fever'];
+const MUD = [[108, 150], [194, 118], [150, 230], [116, 254], [196, 244]];
+const mudSVG = (n = 5) => MUD.slice(0, n).map(([x, y]) => `<g class="mud">${C(x, y, 16, '#a0784a', null, 'opacity=".6"')}${C(x + 13, y + 8, 9, '#a0784a', null, 'opacity=".55"')}</g>`).join('');
+const zzz = () => `<g><text x="200" y="70" font-size="36" font-weight="bold" fill="#9b7be8" font-family="Arial,sans-serif">z</text><text x="226" y="44" font-size="46" font-weight="bold" fill="#b79cff" font-family="Arial,sans-serif">Z</text><animateTransform attributeName="transform" type="translate" values="0 0;8 -10;0 0" dur="2s" repeatCount="indefinite"/></g>`;
+function houseFix(h0) { // older Pet House saves get the new fields
+  if (!h0.decor) h0.decor = {}; if (!h0.wall) h0.wall = 'cream';
+  h0.pets.forEach(p => { if (!p.medals) p.medals = {}; });
+}
+
 screens.house = {
   enter(el, mode) {
-    this.el = el; clearInterval(this.tick);
+    this.el = el; clearInterval(this.tick); this.sleeping = false;
     el.innerHTML = `<div class="hbg"><div class="wall"></div><div class="floor"></div></div><div class="hdeco abs" id="hWin">${WINDOW}</div><div class="hdeco abs" id="hSofa">${SOFA}</div>
-      <div class="hitems"></div><div class="puddles"></div><div class="hpets"></div>
+      <div class="hdecor"></div><div class="hitems"></div><div class="puddles"></div><div class="hpets"></div><div class="hnight"></div>
       <div class="topbar"><button class="icon-btn" id="hHome" style="left:16px;top:16px" aria-label="Home">${ICON.home}</button>
         <button class="pshop" id="hShop">${ICON.bag}<span>Pet Shop</span></button>
-        <div class="tr"><button class="peebtn hidden" id="hPee">${ICON.potty}<span>Take out to pee</span></button><div class="pill coins">${ICON.coin}<b>0</b></div></div></div>
+        <div class="tr"><button class="peebtn hidden" id="hPee">${ICON.potty}<span>Take out to pee</span></button><button class="icon-btn moonbtn" id="hMoon" aria-label="Bedtime">${ICON.moon}</button><div class="pill coins">${ICON.coin}<b>0</b></div></div></div>
       <div class="hempty hidden">${ICON.arrow.replace('<svg', '<svg style="width:46px;height:46px;transform:rotate(180deg)"')}<span>Get a pet!</span></div>`;
     $('#hHome', el).addEventListener('click', () => { SFX.pop(); go('title'); });
     $('#hShop', el).addEventListener('click', () => { SFX.pop(); go('petshop'); });
     $('#hPee', el).addEventListener('click', () => this.peeWalk());
+    $('#hMoon', el).addEventListener('click', () => this.bedtime());
     if (mode === 'in' && save.house) this.start(); else this.menu();
   },
   leave() { clearInterval(this.tick); },
@@ -1903,25 +1963,29 @@ screens.house = {
       $('.hstart .ct', ov).addEventListener('click', () => { ov.remove(); this.menu(); });
     });
   },
-  start() { this.layout(); clearInterval(this.tick); this.tick = setInterval(() => this.second(), 1000); },
+  start() { houseFix(save.house); this.layout(); clearInterval(this.tick); this.tick = setInterval(() => this.second(), 1000); },
   layout() {
     const el = this.el, house = save.house; if (!house) return;
     const port = isPortrait(), FL = Math.round(H * (port ? 0.52 : 0.58)), k = decoK();
     this.FL = FL;
-    $('.hbg .wall', el).style.height = FL + 'px'; $('.hbg .floor', el).style.height = (H - FL) + 'px';
+    $('.hbg .wall', el).style.height = FL + 'px'; $('.hbg .wall', el).style.background = WALLS[house.wall] || WALLS.cream; $('.hbg .floor', el).style.height = (H - FL) + 'px';
     place($('#hWin', el), W / 2 - 110 * k, FL * 0.2, 220 * k, 170 * k);
     place($('#hSofa', el), W * 0.03, FL - 100 * k, 260 * k, 150 * k);
     $('.pill.coins b', el).textContent = house.coins;
     $('.hempty', el).classList.toggle('hidden', house.pets.length > 0);
     $('#hPee', el).classList.toggle('hidden', !house.pets.some(p => p.kind === 'dog'));
     Object.assign($('#hPee', el).style, W < 1000 ? { position: 'absolute', right: '-90px', top: '84px' } : { position: '', right: '', top: '' });
-    // things she bought
-    const owned = Object.keys(HITEMS).filter(id => house.items[id] && !HITEMS[id].home), is = Math.min(90, (W * 0.6) / Math.max(1, owned.length));
-    let ih = owned.map((id, i) => `<div class="hitem abs" data-id="${id}" style="left:${R1(W * 0.3 + i * is)}px;top:${R1(FL - is * 0.55)}px;width:${R1(is * 0.9)}px;height:${R1(is * 0.9)}px">${HITEMS[id].icon}</div>`).join('');
+    // decorations
+    $('.hdecor', el).innerHTML = Object.keys(HDECOR).filter(id => house.decor[id] && HDECOR[id].svg).map(id => { const r = HDECOR[id].pos(FL, k); return `<div class="hdeco abs" data-d="${id}" style="left:${R1(r.x)}px;top:${R1(r.y)}px;width:${R1(r.w)}px;height:${R1(r.h)}px">${HDECOR[id].svg}</div>`; }).join('');
+    $$('.hdecor .hdeco', el).forEach(d => d.addEventListener('click', () => { d.classList.remove('tap'); void d.offsetWidth; d.classList.add('tap'); SFX.chime(); FX.sparkle(...elCenter(d), 10); }));
+    // pet things
+    const owned = Object.keys(HITEMS).filter(id => house.items[id] && !HITEMS[id].home), is = Math.min(90, (W * 0.56) / Math.max(1, owned.length));
+    let ih = owned.map((id, i) => `<div class="hitem abs" data-id="${id}" style="left:${R1(W * 0.34 + i * is)}px;top:${R1(FL - is * 0.55)}px;width:${R1(is * 0.9)}px;height:${R1(is * 0.9)}px">${HITEMS[id].icon}</div>`).join('');
     this.cage = null;
     if (house.items.cage) { const cw = 170 * k; this.cage = { x: W - cw - 30, y: FL - cw * 1.25, w: cw }; ih += `<div class="hcage abs" style="left:${R1(this.cage.x)}px;top:${R1(this.cage.y)}px;width:${R1(cw)}px;height:${R1(cw)}px;z-index:2">${HITEMS.cage.icon}</div>`; }
     $('.hitems', el).innerHTML = ih;
     $$('.hitem', el).forEach(it => it.addEventListener('click', () => { it.classList.remove('tap'); void it.offsetWidth; it.classList.add('tap'); SFX.pop(); }));
+    const bed = $('.hitem[data-id="bed"]', el); this.bedX = bed ? parseFloat(bed.style.left) + parseFloat(bed.style.width) / 2 : null;
     this.spawnPets();
   },
   spawnPets() {
@@ -1932,13 +1996,14 @@ screens.house = {
       const caged = p.kind === 'bird' && this.cage;
       const sz = caged ? this.cage.w * 0.62 : size;
       const ly0 = FL + (H - FL) * 0.38, ly1 = H - size * 0.2, lane = ly0 + (ly1 - ly0) * (house.pets.length > 1 ? i / (house.pets.length - 1) : 0.5);
-      const e = { p, K, move, caged, size: sz, x: rand(W * 0.15, W * 0.85), y: move === 'fly' ? rand(150, FL - 60) : lane, tx: 0, ty: 0, wait: rand(0.5, 2), speed: move === 'fly' ? 140 : move === 'slither' ? 45 : 70,
-        wantIn: rand(4, 10), peeIn: rand(40, 70), accIn: 40, tempSad: 0 };
+      const e = { p, K, move, caged, size: sz, lane, x: rand(W * 0.15, W * 0.85), y: move === 'fly' ? rand(150, FL - 60) : lane, tx: 0, ty: 0, wait: rand(0.5, 2), speed: move === 'fly' ? 140 : move === 'slither' ? 45 : 70,
+        wantIn: rand(4, 10), peeIn: rand(40, 70), accIn: 40, tempSad: 0, hurtIn: rand(60, 130), dirtyIn: rand(35, 80) };
       if (caged) { e.x = this.cage.x + this.cage.w / 2; e.y = this.cage.y + this.cage.w * 0.82; }
-      e.el = h(`<div class="pt hpet" style="z-index:${Math.round(e.y)}"><div class="flip"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(K.art, 'happy')}</div></div></div></div><div class="pname">${p.name}</div><div class="wantb"></div></div>`);
+      e.el = h(`<div class="pt hpet" style="z-index:${Math.round(e.y)}"><div class="flip"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(K.art, 'happy')}</div></div></div></div><div class="pname">${p.name}${Object.keys(p.medals || {}).map(() => '<span class="medal"></span>').join('')}</div><div class="wantb"></div></div>`);
+      $$('.medal', e.el).forEach(m => { m.innerHTML = ICON.medal; });
       e.flip = $('.flip', e.el); e.md = $('.md', e.el);
       layer.appendChild(e.el);
-      e.el.addEventListener('click', () => this.openCare(e));
+      e.el.addEventListener('click', () => { if (this.sleeping) { SFX.boop(); return; } if (e.p.hurt) this.toVet(e); else this.openCare(e); });
       this.refresh(e); this.pos(e);
       return e;
     });
@@ -1947,17 +2012,17 @@ screens.house = {
       if (g !== gen || !layer.isConnected || (this.ents[0] && !this.ents[0].el.isConnected)) return;
       const dt = Math.min(0.05, (t - last) / 1000); last = t;
       for (const e of this.ents) {
-        if (e.caged || e.p.needPee) continue;
+        if (e.caged || e.p.needPee || e.p.hurt) continue;
         if (e.wait > 0) {
           e.wait -= dt;
-          if (e.wait <= 0) {
-            e.tx = rand(W * 0.08, W * 0.92); e.ty = e.move === 'fly' ? rand(150, this.FL - 40) : e.y;
+          if (e.wait <= 0 && !this.sleeping) {
+            e.tx = rand(W * 0.08, W * 0.92); e.ty = e.move === 'fly' ? rand(150, this.FL - 40) : e.lane;
             e.md.className = 'md ' + ({ hop: 'hop2', slither: 'slither', fly: 'flyb' }[e.move] || 'walk'); e.flip.classList.toggle('left', e.tx < e.x);
           }
           continue;
         }
-        const dx = e.tx - e.x, dy = e.ty - e.y, d = Math.hypot(dx, dy), sp = e.speed * dt;
-        if (d <= sp) { e.x = e.tx; e.y = e.ty; e.wait = e.move === 'fly' ? rand(0.5, 2) : rand(1.5, 4.5); this.refresh(e); }
+        const dx = e.tx - e.x, dy = e.ty - e.y, d = Math.hypot(dx, dy), sp = e.speed * dt * (this.sleeping ? 1.6 : 1);
+        if (d <= sp) { e.x = e.tx; e.y = e.ty; e.wait = this.sleeping ? 999 : e.move === 'fly' ? rand(0.5, 2) : rand(1.5, 4.5); this.refresh(e); }
         else { e.x += dx / d * sp; e.y += dy / d * sp; }
         this.pos(e);
       }
@@ -1967,12 +2032,12 @@ screens.house = {
   },
   pos(e) { place(e.el, e.x - e.size / 2, e.y - e.size * 0.95, e.size, e.size); e.el.style.zIndex = e.caged ? 3 : Math.round(e.y); },
   refresh(e) {
-    const p = e.p, S = SP[e.K.art], sv = $('svg', e.el), w = p.want;
-    const mood = e.tempSad > 0 || (w && w.feel !== 'shy' && w.feel !== 'curious') ? 'sad' : w ? 'okay' : 'happy';
+    const p = e.p, S = SP[e.K.art], sv = $('svg', e.el), w = p.want, asleep = this.sleeping && e.wait > 0;
+    const mood = asleep ? 'sleep' : p.hurt || e.tempSad > 0 || (w && w.feel !== 'shy' && w.feel !== 'curious') ? 'sad' : w ? 'okay' : 'happy';
     $('.a-face', sv).innerHTML = face(S.face, mood);
-    $('.a-over', sv).innerHTML = w ? feelOver(w.feel, S) : '';
-    if (e.wait > 0 || e.caged || p.needPee) e.md.className = 'md ' + (p.needPee ? 'shiver' : w ? ({ shy: 'droopy', angry: 'shiver', scared: 'shiver', sad: 'sad', curious: 'idle' }[w.feel]) : 'idle');
-    $('.wantb', e.el).innerHTML = p.needPee ? `<div class="wi">${ICON.potty}</div><small>Pee!</small>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><small>${FEEL_WORD[w.feel]}</small>` : '';
+    $('.a-over', sv).innerHTML = (asleep ? zzz() : p.hurt ? overlay(p.hurt, 0, S) : w ? feelOver(w.feel, S) : '') + (p.dirty ? mudSVG() : '');
+    if (e.wait > 0 || e.caged || p.needPee || p.hurt) e.md.className = 'md ' + (asleep ? 'sleepy' : p.needPee ? 'shiver' : p.hurt ? moodAnim(p.hurt) : w ? ({ shy: 'droopy', angry: 'shiver', scared: 'shiver', sad: 'sad', curious: 'idle' }[w.feel]) : 'idle');
+    $('.wantb', e.el).innerHTML = asleep ? '' : p.hurt ? `<div class="wi">${ICON.vet}</div>` : p.needPee ? `<div class="wi">${ICON.potty}</div><small>Pee!</small>` : p.dirty ? `<div class="wi">${ICON.sponge}</div><small>Bath</small>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><small>${FEEL_WORD[w.feel]}</small>` : '';
     $('#hPee', this.el).classList.toggle('need', save.house.pets.some(q => q.needPee));
   },
   makeWant(e) {
@@ -1981,14 +2046,23 @@ screens.house = {
     e.p.want = { feel: pick(FEELS), item }; store(); this.refresh(e); speak(e.K.art, e.el);
   },
   second() {
-    if (!save.house) return;
+    if (!save.house || this.sleeping) return;
     for (const e of this.ents || []) {
+      const p = e.p;
       if (e.tempSad > 0 && --e.tempSad === 0) this.refresh(e);
-      if (!e.p.want && !e.p.needPee && (e.wantIn -= 1) <= 0) this.makeWant(e);
-      if (e.p.kind !== 'dog') continue;
-      if (!e.p.needPee && (e.peeIn -= 1) <= 0) { e.p.needPee = true; e.accIn = 40; store(); this.refresh(e); SFX.bark(1.75, 3); }
-      else if (e.p.needPee && (e.accIn -= 1) <= 0) this.accident(e);
+      if (p.hurt) continue;
+      if (!p.want && !p.needPee && (e.wantIn -= 1) <= 0) this.makeWant(e);
+      if (!p.dirty && (e.dirtyIn -= 1) <= 0) { p.dirty = true; store(); this.refresh(e); }
+      if (!p.needPee && (e.hurtIn -= 1) <= 0) { p.hurt = pick(HURTS); store(); this.refresh(e); speak(e.K.art, e.el); SFX.sneeze(); continue; }
+      if (p.kind !== 'dog') continue;
+      if (!p.needPee && (e.peeIn -= 1) <= 0) { p.needPee = true; e.accIn = 40; store(); this.refresh(e); SFX.bark(1.75, 3); }
+      else if (p.needPee && (e.accIn -= 1) <= 0) this.accident(e);
     }
+  },
+  toVet(e) {   // off to Dr. Evie's exam table
+    SFX.siren(); speak(e.K.art, e.el);
+    day = { patients: [{ sp: e.K.art, prob: e.p.hurt, done: false }], next: 0, starsToday: 0, theme: null, vet: { id: e.p.id, name: e.p.name } };
+    setTimeout(() => { if (cur === 'house') go('exam'); }, 500);
   },
   accident(e) {
     e.p.needPee = false; e.peeIn = rand(50, 80); e.tempSad = 4; store();
@@ -1996,10 +2070,31 @@ screens.house = {
     $('.puddles', this.el).appendChild(pd); SFX.tinkle(); this.refresh(e);
     pd.addEventListener('click', () => { SFX.whoosh(); FX.bubbles(...elCenter(pd), 10); pd.remove(); });
   },
+  bedtime() {
+    if (this.sleeping || !save.house.pets.length) { SFX.boop(); return; }
+    const since = Date.now() - (save.house.slept || 0);
+    if (since < 60000) { SFX.boop(); toast('Not sleepy yet!'); return; }
+    const g = gen; this.sleeping = true; SFX.aww();
+    const n = $('.hnight', this.el); n.innerHTML = `<div class="night"></div><div class="moon"></div>` + [...Array(8)].map(() => `<div class="twk" style="left:${rand(4, 96).toFixed(1)}%;top:${rand(10, 40).toFixed(1)}%;animation-delay:${rand(-2, 0).toFixed(2)}s"></div>`).join('');
+    this.el.classList.add('nighttime');
+    for (const e of this.ents) {   // everyone heads to bed (or curls up where they are)
+      if (e.caged || e.p.needPee || e.p.hurt) { e.wait = 999; this.refresh(e); continue; }
+      e.tx = this.bedX != null ? this.bedX + rand(-60, 60) : e.x; e.ty = e.move === 'fly' ? this.FL - 20 : e.lane; e.wait = 0;
+      e.md.className = 'md ' + ({ hop: 'hop2', slither: 'slither', fly: 'flyb' }[e.move] || 'walk'); e.flip.classList.toggle('left', e.tx < e.x);
+    }
+    run(async () => {
+      await wait(7000, g);
+      this.sleeping = false; this.el.classList.remove('nighttime'); n.innerHTML = '';
+      const gain = save.house.pets.length * 5; save.house.coins += gain; save.house.slept = Date.now(); store();
+      SFX.cheer(); FX.sparkle(innerWidth / 2, innerHeight / 3, 30); toast(`Good morning! +${gain}`);
+      $('.pill.coins b', this.el).textContent = save.house.coins; coinPop($('.pill.coins', this.el));
+      for (const e of this.ents) { e.wait = rand(0.5, 2); this.refresh(e); speak(e.K.art, e.el); }
+    });
+  },
   peeWalk() {
     const e = (this.ents || []).find(x => x.p.needPee);
     const b = $('#hPee', this.el);
-    if (!e) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); SFX.boop(); return; }
+    if (!e || this.sleeping) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); SFX.boop(); return; }
     SFX.pop(); const g = gen;
     const ds = 200, yd = h(`<div class="yard"><div class="ysky"></div><div class="ygrass"></div><div class="abs" style="left:${R1(W * 0.62)}px;top:${R1(H * 0.6 - 300)}px;width:200px;height:300px">${TREE}</div>
       <div class="ypud" style="left:${R1(W * 0.62 - 40)}px;top:${R1(H * 0.6 + 70)}px;width:150px"></div>
@@ -2023,15 +2118,32 @@ screens.house = {
     const ov = h(`<div class="overlay"><div class="care hcare"><button class="icon-btn x" aria-label="Close">${ICON.x}</button><div class="cname">${p.name}</div><div class="lvls"></div>
       <div class="hrow"><div class="pt cpet"><div class="mv"><div class="md idle"><div class="rx">${animalSVG(art, 'happy')}</div></div></div></div><div class="wantbig"></div></div><div class="itray"></div></div></div>`);
     stage.appendChild(ov);
-    $('.x', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
-    ov.addEventListener('pointerdown', ev => { if (ev.target === ov) ov.remove(); });
+    const close = () => { ov.remove(); this.refresh(e); };
+    $('.x', ov).addEventListener('click', () => { SFX.pop(); close(); });
+    ov.addEventListener('pointerdown', ev => { if (ev.target === ov) close(); });
     const pet = $('.cpet', ov);
+    let scrub = 0;
+    pet.addEventListener('click', ev => {   // bath time: scrub the mud off
+      if (!p.dirty || scrub >= MUD.length) { hop(pet); speak(art, pet); return; }
+      const m = $('.mud', pet); if (m) m.remove(); scrub++;
+      SFX.bubbles(); FX.bubbles(ev.clientX, ev.clientY, 10);
+      if (scrub >= MUD.length) { SFX.sparkle(); FX.sparkle(...elCenter(pet), 20); drawWant(); }
+    });
+    const drawWant = () => {
+      const w = p.want, wb = $('.wantbig', ov);
+      if (p.dirty && scrub < MUD.length) wb.innerHTML = `<div class="wi ahint">${ICON.sponge}</div><span>Bath</span>`;
+      else if (p.dirty) { wb.innerHTML = `<button class="wi brushbtn" aria-label="Brush">${ICON.brush}</button><span>Brush</span>`; $('.brushbtn', wb).addEventListener('click', () => {
+        const b = $('.brushbtn', wb); b.classList.add('u-rub'); SFX.whoosh();
+        setTimeout(() => { p.dirty = false; e.dirtyIn = rand(60, 120); save.house.coins += 10; store(); coinPop(pet); FX.sparkle(...elCenter(pet), 24); SFX.cheer(); $('.md', pet).className = 'md dance'; toast('So clean! +10'); $('.pill.coins b', this.el).textContent = save.house.coins; draw(); }, 900);
+      }); }
+      else wb.innerHTML = p.needPee ? `<div class="wi">${ICON.potty}</div><span>Pee!</span>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><span>${FEEL_WORD[w.feel]}</span>` : `<div class="wi">${V(P(heartPath(50, 54, 40), '#ff6b8a', '#d6456a', '', 4))}</div><span>Happy!</span>`;
+    };
     const draw = () => {
       const w = p.want, S = SP[art], sv = $('svg', pet);
-      $('.lvls', ov).innerHTML = FEELS.map(f => `<div class="lv ${w && w.feel === f ? 'hot' : ''}" data-f="${f}"><span>${FEEL_WORD[f]}</span><b>${p.feel[f]}</b></div>`).join('');
+      $('.lvls', ov).innerHTML = FEELS.map(f => `<div class="lv ${w && w.feel === f ? 'hot' : ''}" data-f="${f}">${p.medals[f] ? `<i class="lmedal">${ICON.medal}</i>` : ''}<span>${FEEL_WORD[f]}</span><b>${p.feel[f]}</b></div>`).join('');
       $('.a-face', sv).innerHTML = face(S.face, w && w.feel !== 'shy' && w.feel !== 'curious' ? 'sad' : w ? 'okay' : 'happy');
-      $('.a-over', sv).innerHTML = w ? feelOver(w.feel, S) : '';
-      $('.wantbig', ov).innerHTML = p.needPee ? `<div class="wi">${ICON.potty}</div><span>Pee!</span>` : w ? `<div class="wi">${HITEMS[w.item].icon}</div><span>${FEEL_WORD[w.feel]}</span>` : `<div class="wi">${V(P(heartPath(50, 54, 40), '#ff6b8a', '#d6456a', '', 4))}</div><span>Happy!</span>`;
+      $('.a-over', sv).innerHTML = (w ? feelOver(w.feel, S) : '') + (p.dirty ? mudSVG(MUD.length - scrub) : '');
+      drawWant();
       const owned = Object.keys(HITEMS).filter(id => save.house.items[id] && !HITEMS[id].home);
       $('.itray', ov).innerHTML = owned.length ? owned.map(id => `<button data-id="${id}" aria-label="${id}">${HITEMS[id].icon}</button>`).join('') : `<button data-shop="1" aria-label="Pet Shop">${ICON.bag}</button>`;
       $$('.itray button', ov).forEach(b => b.addEventListener('click', () => { if (b.dataset.shop) { ov.remove(); go('petshop'); return; } give(b); }));
@@ -2039,10 +2151,19 @@ screens.house = {
     const give = b => {
       const id = b.dataset.id, w = p.want;
       if (w && w.item === id) {
-        p.feel[w.feel] = (p.feel[w.feel] || 0) + 1; save.house.coins += 10; const f = w.feel; p.want = null; e.wantIn = rand(10, 22); store();
+        p.feel[w.feel] = (p.feel[w.feel] || 0) + 1; save.house.coins += 10; const f = w.feel; p.want = null; e.wantIn = rand(10, 22);
+        let medal = false;
+        if (p.feel[f] >= 5 && !p.medals[f]) { p.medals[f] = true; save.house.coins += 50; medal = true; }   // level-up prize
+        store();
         coinPop(pet); FX.sparkle(...elCenter(pet), 20); SFX.cheer(); $('.md', pet).className = 'md dance'; speak(art, pet);
         draw(); const lv = $(`.lv[data-f="${f}"]`, ov); if (lv) lv.classList.add('bump');
-        toast(`${FEEL_WORD[f]} level ${p.feel[f]}! +10`); $('.pill.coins b', this.el).textContent = save.house.coins; this.refresh(e);
+        $('.pill.coins b', this.el).textContent = save.house.coins;
+        if (medal) {
+          SFX.fanfare(); FX.confetti(140);
+          const mb = h(`<div class="medalpop"><div class="mi">${ICON.medal}</div><div class="mt">${FEEL_WORD[f]} level 5!</div><div class="mc">${ICON.coin}+50</div></div>`); stage.appendChild(mb);
+          setTimeout(() => mb.remove(), 2600);
+          const nameEl = $('.pname', e.el); if (nameEl) nameEl.insertAdjacentHTML('beforeend', `<span class="medal">${ICON.medal}</span>`);
+        } else toast(`${FEEL_WORD[f]} level ${p.feel[f]}! +10`);
       } else if (HITEMS[id].for.includes(p.kind)) { hop(pet); FX.hearts(...elCenter(pet), 5); SFX.aww(); }
       else { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); const rx = $('.rx', pet); rx.classList.remove('sneeze'); void rx.offsetWidth; rx.classList.add('sneeze'); SFX.boop(); }
     };
@@ -2052,10 +2173,10 @@ screens.house = {
 
 screens.petshop = {
   enter(el, tab) {
-    this.el = el; this.tab = tab || 'pets'; if (!save.house) newHouse();
+    this.el = el; this.tab = tab || 'pets'; if (!save.house) newHouse(); houseFix(save.house);
     el.innerHTML = `<div class="shop-bg"></div><div class="awning" style="background:repeating-linear-gradient(90deg,#8ee3c8 0 70px,#fff 70px 140px)"></div><div class="shop-sign" style="border-color:#8ee3c8;color:#3aa889">Pet Shop</div>
       <div class="topbar"><button class="icon-btn" id="psBack" style="left:16px;top:16px;background:#5cc06b;box-shadow:0 7px 0 #3a8a48" aria-label="Pet House">${ICON.phouse}</button><div class="tr"><div class="pill coins">${ICON.coin}<b>${save.house.coins}</b></div></div></div>
-      <div class="tabs"><button class="tab" data-tab="pets" aria-label="Pets">${ICON.paw}</button><button class="tab" data-tab="stuff" aria-label="Pet things">${ICON.bag}</button></div><div class="sgrid"></div>`;
+      <div class="tabs"><button class="tab" data-tab="pets" aria-label="Pets">${ICON.paw}</button><button class="tab" data-tab="stuff" aria-label="Pet things">${ICON.bag}</button><button class="tab" data-tab="house" aria-label="Decorate the house">${ICON.home.replace(/#fff/g, '#5cc06b')}</button></div><div class="sgrid"></div>`;
     $('#psBack', el).addEventListener('click', () => { SFX.pop(); go('house', 'in'); });
     $$('.tab', el).forEach(t => t.addEventListener('click', () => { SFX.pop(); this.tab = t.dataset.tab; this.render(); }));
     this.render();
@@ -2066,12 +2187,23 @@ screens.petshop = {
     $('.pill.coins b', el).textContent = house.coins;
     const full = house.pets.length >= 5;
     if (this.tab === 'pets') g.innerHTML = ALLK.map(k => `<div class="card ${full || house.coins < HKINDS[k].cost ? 'poor' : ''}" data-k="${k}"><div class="pic">${animalSVG(HKINDS[k].art, 'happy')}</div><div class="price">${ICON.coin}<b>${HKINDS[k].cost}</b></div></div>`).join('');
-    else g.innerHTML = Object.keys(HITEMS).map(id => { const it = HITEMS[id], own = house.items[id];
+    else if (this.tab === 'stuff') g.innerHTML = Object.keys(HITEMS).map(id => { const it = HITEMS[id], own = house.items[id];
       return `<div class="card ${own ? 'owned' : house.coins < it.cost ? 'poor' : ''}" data-i="${id}"><div class="mini">${it.for.length < ALLK.length ? it.for.slice(0, 3).map(k => `<span>${animalSVG(HKINDS[k].art, 'happy')}</span>`).join('') : ''}</div><div class="pic">${it.icon}</div>${own ? `<div class="got">${ICON.check}</div>` : it.cost ? `<div class="price">${ICON.coin}<b>${it.cost}</b></div>` : `<div class="free">FREE</div>`}</div>`; }).join('');
+    else g.innerHTML = Object.keys(HDECOR).map(id => { const d = HDECOR[id], own = house.decor[id], on = d.wall && house.wall === d.wall;
+      return `<div class="card ${own ? 'owned' : house.coins < d.cost ? 'poor' : ''} ${on ? 'wallon' : ''}" data-d="${id}"><div class="pic">${d.wall ? wallSwatch(d.wall) : d.svg}</div>${own ? `<div class="got">${ICON.check}</div>` : `<div class="price">${ICON.coin}<b>${d.cost}</b></div>`}</div>`; }).join('');
     $$('.card', g).forEach(c => c.addEventListener('click', () => this.tap(c)));
+  },
+  confirm(icon, cost, onYes) {
+    SFX.pop();
+    const ov = h(`<div class="overlay"><div class="buy"><div class="big">${icon}</div><div class="row"><button class="icon-btn no" aria-label="No">${ICON.x}</button><button class="yes" aria-label="Buy">${ICON.coin}<b>${cost}</b></button></div></div></div>`);
+    stage.appendChild(ov);
+    $('.no', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
+    ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
+    $('.yes', ov).addEventListener('click', () => { ov.remove(); onYes(); });
   },
   tap(c) {
     const house = save.house, bounce = cls => { c.classList.remove('shake', 'hopit'); void c.offsetWidth; c.classList.add(cls); };
+    const done = sel => { SFX.coin(); FX.sparkle(...elCenter(c), 20); this.render(); const nc = $(sel, this.el); if (nc) nc.classList.add('hopit'); };
     if (c.dataset.k) {
       const k = c.dataset.k, K = HKINDS[k];
       if (house.pets.length >= 5) { bounce('shake'); SFX.boop(); toast('5 pets is the most!'); return; }
@@ -2080,22 +2212,24 @@ screens.petshop = {
       namePicker(K.art, name => {
         if (save.house.coins < K.cost || save.house.pets.length >= 5) return;
         save.house.coins -= K.cost; save.house.n++;
-        save.house.pets.push({ id: save.house.n, kind: k, name, feel: { shy: 0, angry: 0, scared: 0, sad: 0, curious: 0 }, want: null, needPee: false });
+        save.house.pets.push({ id: save.house.n, kind: k, name, feel: { shy: 0, angry: 0, scared: 0, sad: 0, curious: 0 }, medals: {}, want: null, needPee: false });
         store(); SFX.coin(); FX.confetti(100); setTimeout(() => SFX.fanfare(), 200); go('house', 'in');
       });
+      return;
+    }
+    if (c.dataset.d) {
+      const id = c.dataset.d, d = HDECOR[id];
+      if (house.decor[id]) { if (d.wall) { house.wall = house.wall === d.wall ? 'cream' : d.wall; store(); SFX.chime(); this.render(); } else { bounce('hopit'); SFX.chime(); } return; }
+      if (house.coins < d.cost) { bounce('shake'); SFX.boop(); return; }
+      this.confirm(d.wall ? wallSwatch(d.wall) : d.svg, d.cost, () => { if (save.house.coins < d.cost || house.decor[id]) return; house.coins -= d.cost; house.decor[id] = true; if (d.wall) house.wall = d.wall; store(); done(`.card[data-d="${id}"]`); });
       return;
     }
     const id = c.dataset.i, it = HITEMS[id];
     if (house.items[id]) { bounce('hopit'); SFX.chime(); return; }
     if (house.coins < it.cost) { bounce('shake'); SFX.boop(); return; }
-    const buy = () => { house.coins -= it.cost; house.items[id] = true; store(); SFX.coin(); FX.sparkle(...elCenter(c), 20); this.render(); const nc = $(`.card[data-i="${id}"]`, this.el); if (nc) nc.classList.add('hopit'); };
+    const buy = () => { if (save.house.coins < it.cost || house.items[id]) return; house.coins -= it.cost; house.items[id] = true; store(); done(`.card[data-i="${id}"]`); };
     if (!it.cost) { buy(); return; }
-    SFX.pop();
-    const ov = h(`<div class="overlay"><div class="buy"><div class="big">${it.icon}</div><div class="row"><button class="icon-btn no" aria-label="No">${ICON.x}</button><button class="yes" aria-label="Buy">${ICON.coin}<b>${it.cost}</b></button></div></div></div>`);
-    stage.appendChild(ov);
-    $('.no', ov).addEventListener('click', () => { SFX.pop(); ov.remove(); });
-    ov.addEventListener('pointerdown', e => { if (e.target === ov) ov.remove(); });
-    $('.yes', ov).addEventListener('click', () => { ov.remove(); if (save.house.coins >= it.cost && !save.house.items[id]) buy(); });
+    this.confirm(it.icon, it.cost, buy);
   }
 };
 
